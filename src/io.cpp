@@ -27,13 +27,11 @@ void IO::inputRoutine(void* p)
     {
         while (!inputPass) thread_dispatch();
 
-        while (*((char*)CONSOLE_STATUS) & CONSOLE_RX_STATUS_BIT)
+        while ((inputPass = (*((char*)CONSOLE_STATUS) & CONSOLE_RX_STATUS_BIT)))
         {
             char c = *((char*)CONSOLE_RX_DATA);
             inputBuffer->uPut(c);
         }
-
-        inputPass = 0;
     }
 }
 
@@ -43,12 +41,10 @@ void IO::outputRoutine(void* p)
     {
         while (!outputPass) thread_dispatch();
         
-        while (*((char*)CONSOLE_STATUS) & CONSOLE_TX_STATUS_BIT)
+        while ((outputPass = (*((char*)CONSOLE_STATUS) & CONSOLE_TX_STATUS_BIT)))
         {
             char c = outputBuffer->uGet();
             *((char*)CONSOLE_TX_DATA) = c;
         }
-
-        outputPass = 0;
     }
 }

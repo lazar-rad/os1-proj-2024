@@ -135,8 +135,6 @@ private:
     static TCB* outputTCB;
 
     friend class Kernel;
-
-    friend class IOTester;
 };
 
 

@@ -31,10 +31,13 @@ int main()
 
     Semaphore* userMainSem = new Semaphore(0);
 
-    Thread* userMainThread = new Thread(&userMainWrapper, userMainSem);
-    userMainThread->start();
+    TCB* userMainThread;
+    thread_create((thread_t*)&userMainThread, &userMainWrapper, userMainSem);
 
-    userMainSem->wait();
+    while (userMainSem->timedWait(200) == TIMEOUT)
+    {
+        if (userMainThread->isFinished()) break;
+    }
 
     // system closing begin
 
