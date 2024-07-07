@@ -21,6 +21,10 @@ public:
 
     static int sleep (time_t timeout) { return time_sleep(timeout); }
 
+    void send(const char* message) { ::send(myHandle, message); }
+
+    static const char* receive() { return ::receive(); }
+
 protected:
     Thread () : myHandle(nullptr), body(nullptr), arg(nullptr) { }
     virtual void run () {}

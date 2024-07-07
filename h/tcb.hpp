@@ -18,15 +18,7 @@ public:
     enum Mode { USER = 0, SYSTEM };
     enum SchPut { PUT = true, NOPUT = false };
 
-    ~TCB()
-    {
-        delete userStack;
-        delete systemStack;
-        nextTCB = nullptr;
-        nextReady = nullptr;
-        nextSleep = nullptr;
-        nextSemBlocked = nullptr;
-    }
+    ~TCB();
 
     static TCB* threadCreate(Body body, void* arg, Mode mode, void* userStackSpace, SchPut schPut = SchPut::PUT);
 
@@ -87,7 +79,8 @@ private:
         body(body), arg(arg),
         finished(false), exitStatus(0), nextReady(nullptr),
         timeSlice(timeSlice), sleeps(false), timeSleepRelative(0), nextSleep(nullptr),
-        blockedAtSem(nullptr), nextSemBlocked(nullptr), unblockManner(UnblockManner::REGULAR)
+        blockedAtSem(nullptr), nextSemBlocked(nullptr), unblockManner(UnblockManner::REGULAR),
+        semSend(nullptr), semReceive(nullptr), message(nullptr)
     {
         if (body && (sps.userSP == 0 || sps.systemSP == 0))
         {
@@ -128,6 +121,10 @@ private:
     kSemaphore* blockedAtSem;
     TCB* nextSemBlocked;
     UnblockManner unblockManner;
+
+    kSemaphore* semSend;
+    kSemaphore* semReceive;
+    char* message;
     
     static uint64 IDCounter;
     static uint64 timeSliceCounter;

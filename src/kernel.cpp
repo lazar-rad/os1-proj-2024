@@ -50,6 +50,8 @@ void Kernel::init()
     irr[SYSCALL_TIME_SLEEP] = &handleTimeSleep;
     irr[SYSCALL_GETC] = &handleGetc;
     irr[SYSCALL_PUTC] = &handlePutc;
+    irr[SYSCALL_SEND] = &handleSend;
+    irr[SYSCALL_RECEIVE] = &handleReceive;
 
     master = TCB::threadCreate(nullptr, nullptr, TCB::Mode::SYSTEM, nullptr);
 }
@@ -195,4 +197,21 @@ uint64 Kernel::handlePutc(uint64 a1, uint64 a2, uint64 a3, uint64 a4)
 //    __putc((char)a1);
     IO::outputBuffer->kPut((char)a1);
     return 0;
+}
+
+uint64 Kernel::handleSend(uint64 a1, uint64 a2, uint64 a3, uint64 a4)
+{
+    TCB* tcb = (TCB*)a1;
+    tcb->semSend->wait();
+    tcb->message = (char*)a2;
+    tcb->semReceive->signal();
+    return 0;
+}
+
+uint64 Kernel::handleReceive(uint64 a1, uint64 a2, uint64 a3, uint64 a4)
+{
+    TCB::running->semReceive->wait();
+    char* msg = TCB::running->message;
+    TCB::running->semSend->signal();
+    return (uint64)msg;
 }

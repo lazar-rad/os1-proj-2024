@@ -148,7 +148,9 @@ private:
 
     static uint64 handlePutc(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 
-//    static uint64 handleSystemSwitch(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
+    static uint64 handleSend(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
+
+    static uint64 handleReceive(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 
 };
 

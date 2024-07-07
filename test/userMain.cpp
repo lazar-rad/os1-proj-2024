@@ -4,6 +4,7 @@
 #define LEVEL_2_IMPLEMENTED 1
 #define LEVEL_3_IMPLEMENTED 1
 #define LEVEL_4_IMPLEMENTED 1
+#define MODIFICATION_20_IMPLEMENTED 1
 
 #if LEVEL_2_IMPLEMENTED == 1
 // TEST 1 (zadatak 2, niti C API i sinhrona promena konteksta)
@@ -28,6 +29,11 @@
 #include "../test/ConsumerProducer_CPP_API_test.hpp"
 #include "System_Mode_test.hpp"
 
+#endif
+
+#if MODIFICATION_20_IMPLEMENTED == 1
+// TEST 8 (zadatak 8. (modifikacija 20): send receive)
+#include "../test/SendReceive_CPP_API_test.hpp"
 #endif
 
 void userMain() {
@@ -98,6 +104,12 @@ void userMain() {
             System_Mode_test();
             printString("Test se nije uspesno zavrsio\n");
             printString("TEST 7 (zadatak 2., testiranje da li se korisnicki kod izvrsava u korisnickom rezimu)\n");
+#endif
+            break;
+        case 8:
+#if MODIFICATION_20_IMPLEMENTED == 1
+            testSendReceive();
+            printString("TEST 8 (zadatak 8. (modifikacija 20): send receive)\n");
 #endif
             break;
         default:

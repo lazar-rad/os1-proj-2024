@@ -15,6 +15,8 @@
 #define SYSCALL_TIME_SLEEP      0x31
 #define SYSCALL_GETC            0x41
 #define SYSCALL_PUTC            0x42
+#define SYSCALL_SEND            0x51
+#define SYSCALL_RECEIVE         0x52
 
 #define ERR_MEM_FREE          -1
 #define ERR_THREAD_CREATE     -1
@@ -28,7 +30,8 @@
 #define TIMEOUT -2
 
 #define RET_VOID(syscall_num) (syscall_num == SYSCALL_THREAD_DISPATCH || \
-                               syscall_num == SYSCALL_PUTC)
+                               syscall_num == SYSCALL_PUTC || \
+                               syscall_num == SYSCALL_SEND)
 
 typedef unsigned char uint8;
 typedef unsigned int uint;
@@ -76,6 +79,10 @@ int time_sleep(time_t timeout); // syscall 0x31
 char getc(); // syscall 0x41
 
 void putc(char c); // syscall 0x42
+
+void send(thread_t handle, const char* message); // syscall 0x51
+
+const char* receive(); // syscall0x52
 
 #define SYSCALL_SWITCH  0x7f
 int systemSwitch(int mode);

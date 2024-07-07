@@ -82,13 +82,15 @@ void putc(char c)
     syscall(SYSCALL_PUTC, (uint64)c, 0, 0, 0);
 }
 
-
-/*
-int systemSwitch(int mode)
+void send(thread_t handle, const char* message)
 {
-    return (int)syscall(SYSCALL_SWITCH, mode, 0, 0, 0);
+    syscall(SYSCALL_SEND, (uint64)handle, (uint64)message, 0, 0);
 }
-*/
+
+const char* receive()
+{
+    return (const char*)syscall(SYSCALL_RECEIVE, 0, 0, 0, 0);
+}
 
 #ifdef __cplusplus
 }

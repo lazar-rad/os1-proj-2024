@@ -17,9 +17,24 @@ uint64 TCB::timeSliceCounter = 0;
 TCB* TCB::TCBsHead;
 TCB* TCB::TCBsTail;
 
+TCB::~TCB()
+{
+    delete userStack;
+    delete systemStack;
+    nextTCB = nullptr;
+    nextReady = nullptr;
+    nextSleep = nullptr;
+    nextSemBlocked = nullptr;
+    semSend->close();
+    semReceive->close();
+}
+
 TCB* TCB::threadCreate(Body body, void* arg, Mode mode, void* userStackSpace, SchPut schPut)
 {
     TCB* tcb = new TCB(body, arg, mode, userStackSpace, DEFAULT_TIME_SLICE);
+    tcb->semSend = kSemaphore::kSemaphoreCreate(1);
+    tcb->semReceive = kSemaphore::kSemaphoreCreate(0);
+    if (!tcb->semSend || !tcb->semReceive) tcb->setFinished(true);
     if (tcb->isFinished())
     {
         delete tcb;
