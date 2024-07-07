@@ -23,7 +23,9 @@ int main()
 
     Scheduler::init();
 
+#if USE_IO == 1
     IO::init();
+#endif
 
     Kernel::ms_sstatus(Kernel::BitMaskSstatus::SSTATUS_SIE);
 

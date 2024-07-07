@@ -9,6 +9,8 @@
 #include "../h/tcb.hpp"
 #include "../h/kSemaphore.hpp"
 
+#define USE_IO 1
+
 class CharBuffer
 {
 public:
@@ -59,24 +61,26 @@ public:
 */
     void uPut(char c)
     {
+        uint64 sstatus = Kernel::r_sstatus();
         Kernel::mc_sstatus(Kernel::BitMaskSstatus::SSTATUS_SIE);
         semPut->wait();
         mutex->wait();
         put(c);
         mutex->signal();
         semGet->signal();
-        Kernel::ms_sstatus(Kernel::BitMaskSstatus::SSTATUS_SIE);
+        Kernel::ms_sstatus(sstatus & Kernel::BitMaskSstatus::SSTATUS_SIE ? Kernel::BitMaskSstatus::SSTATUS_SIE : 0);
     }
 
     char uGet()
     {
+        uint64 sstatus = Kernel::r_sstatus();
         Kernel::mc_sstatus(Kernel::BitMaskSstatus::SSTATUS_SIE);
         semGet->wait();
         mutex->wait();
         char c = get();
         mutex->signal();
         semPut->signal();
-        Kernel::ms_sstatus(Kernel::BitMaskSstatus::SSTATUS_SIE);
+        Kernel::ms_sstatus(sstatus & Kernel::BitMaskSstatus::SSTATUS_SIE ? Kernel::BitMaskSstatus::SSTATUS_SIE : 0);
         return c;
     }
     void* operator new   (size_t n) { return MemoryManager::kMemAlloc_byte(n); }

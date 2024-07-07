@@ -1,5 +1,8 @@
 #include "../lib/hw.h"
+
+#if USE_IO != 1
 #include "../lib/console.h"
+#endif
 
 #include "../h/syscall_c.h"
 #include "../h/syscall_cpp.hpp"
@@ -90,13 +93,16 @@ void Kernel::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, ui
             }
             break;
         case INTERRUPT_EXTERNAL:
+#if USE_IO == 1
             if (plic_claim() == CONSOLE_IRQ)
             {
                 plic_complete(CONSOLE_IRQ);
                 IO::inputPass = 1;
                 IO::outputPass = 1;
             }
-//            console_handler();
+#else
+            console_handler();
+#endif
             break;
 
         default:
@@ -189,14 +195,20 @@ uint64 Kernel::handleTimeSleep(uint64 a1, uint64 a2, uint64 a3, uint64 a4)
 
 uint64 Kernel::handleGetc(uint64 a1, uint64 a2, uint64 a3, uint64 a4)
 {
-//    return (uint64)__getc();
+#if USE_IO == 1
     return IO::inputBuffer->kGet();
+#else
+    return (uint64)__getc();
+#endif
 }
 
 uint64 Kernel::handlePutc(uint64 a1, uint64 a2, uint64 a3, uint64 a4)
 {
-//    __putc((char)a1);
+#if USE_IO == 1
     IO::outputBuffer->kPut((char)a1);
+#else
+    __putc((char)a1);
+#endif
     return 0;
 }
 
