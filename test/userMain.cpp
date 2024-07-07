@@ -6,6 +6,7 @@
 #define LEVEL_4_IMPLEMENTED 1
 #define MODIFICATION_20_IMPLEMENTED 1
 #define MODIFICATION_30_IMPLEMENTED 1
+#define ADDITIONAL_MOD_JOINALL_IMPLEMENTED 1
 
 #if LEVEL_2_IMPLEMENTED == 1
 // TEST 1 (zadatak 2, niti C API i sinhrona promena konteksta)
@@ -41,10 +42,16 @@
 #include "../test/TimedJoin_CPP_API_test.hpp"
 #endif
 
+#if ADDITIONAL_MOD_JOINALL_IMPLEMENTED == 1
+// TEST 10 (zadatak 10. (dodatna modifikacija, jun 2024): joinAll)
+#include "../test/JoinAll_CPP_API_test.hpp"
+#endif
+
 void userMain() {
-    printString("Unesite broj testa? [1-9]\n");
-    int test = getc() - '0';
-    getc(); // Enter posle broja
+    char input[30];
+    printString("Unesite broj testa? [1-10]\n");
+    getString(input, 30);
+    int test = stringToInt(input);
 
     if ((test >= 1 && test <= 2) || test == 7) {
         if (LEVEL_2_IMPLEMENTED == 0) {
@@ -121,6 +128,12 @@ void userMain() {
 #if MODIFICATION_30_IMPLEMENTED == 1
             testTimedJoin();
             printString("TEST 9 (modifikacija 30: timedJoin)\n");
+#endif
+            break;
+        case 10:
+#if ADDITIONAL_MOD_JOINALL_IMPLEMENTED == 1
+            testJoinAll();
+            printString("TEST 10 (dodatna modifikacija (jun 2024): joinAll)\n");
 #endif
             break;
         default:

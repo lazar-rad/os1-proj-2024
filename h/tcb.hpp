@@ -81,6 +81,9 @@ private:
     kSemaphore* semTimedJoin;
     uint64 numOfJoining;
 
+    kSemaphore* semJoinAll;
+    uint64 numOfActiveChildren;
+
     uint64 timeSlice;
     bool sleeps;
     time_t timeSleepRelative;

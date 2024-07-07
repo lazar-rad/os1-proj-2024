@@ -130,6 +130,10 @@ private:
 
     static uint64 handleThreadDispatch(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 
+    static uint64 handleTimedJoin(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
+
+    static uint64 handleJoinAll(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
+
     static uint64 handleSemOpen(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 
     static uint64 handleSemClose(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
@@ -151,8 +155,6 @@ private:
     static uint64 handleSend(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 
     static uint64 handleReceive(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
-
-    static uint64 handleTimedJoin(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 };
 
 inline uint64 Kernel::r_scause()

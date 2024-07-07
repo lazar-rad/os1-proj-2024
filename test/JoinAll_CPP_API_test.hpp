@@ -1,0 +1,6 @@
+#ifndef XV6_JOINALL_CPP_API_TEST_HPP
+#define XV6_JOINALL_CPP_API_TEST_HPP
+
+void testJoinAll();
+
+#endif //XV6_JOINALL_CPP_API_TEST_HPP

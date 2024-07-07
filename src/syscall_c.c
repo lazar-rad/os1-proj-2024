@@ -37,6 +37,16 @@ void thread_dispatch()
     syscall(SYSCALL_THREAD_DISPATCH, 0, 0, 0, 0);
 }
 
+int timedJoin(thread_t handle, time_t timeout)
+{
+    return (int)syscall(SYSCALL_TIMEDJOIN, (uint64)handle, (uint64)timeout, 0, 0);
+}
+
+void thread_joinall()
+{
+    syscall(SYSCALL_THREAD_JOINALL, 0, 0, 0, 0);
+}
+
 int sem_open(sem_t* handle, unsigned init)
 {
     return (int)syscall(SYSCALL_SEM_OPEN, (uint64)handle, (uint64)init, 0, 0);
@@ -90,11 +100,6 @@ void send(thread_t handle, const char* message)
 const char* receive()
 {
     return (const char*)syscall(SYSCALL_RECEIVE, 0, 0, 0, 0);
-}
-
-int timedJoin(thread_t handle, time_t timeout)
-{
-    return (int)syscall(SYSCALL_TIMEDJOIN, (uint64)handle, (uint64)timeout, 0, 0);
 }
 
 #ifdef __cplusplus

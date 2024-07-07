@@ -27,6 +27,8 @@ public:
 
     int timedJoin(time_t timeout) { return ::timedJoin(myHandle, timeout); }
 
+    static void joinAll() { return thread_joinall(); }
+
 protected:
     Thread () : myHandle(nullptr), body(nullptr), arg(nullptr) { }
     virtual void run () {}

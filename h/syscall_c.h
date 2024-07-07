@@ -6,6 +6,8 @@
 #define SYSCALL_THREAD_CREATE   0x11
 #define SYSCALL_THREAD_EXIT     0x12
 #define SYSCALL_THREAD_DISPATCH 0x13
+#define SYSCALL_TIMEDJOIN       0x14
+#define SYSCALL_THREAD_JOINALL  0x15
 #define SYSCALL_SEM_OPEN        0x21
 #define SYSCALL_SEM_CLOSE       0x22
 #define SYSCALL_SEM_WAIT        0x23
@@ -17,7 +19,6 @@
 #define SYSCALL_PUTC            0x42
 #define SYSCALL_SEND            0x51
 #define SYSCALL_RECEIVE         0x52
-#define SYSCALL_TIMEDJOIN       0x14
 
 #define ERR_MEM_FREE          -1
 #define ERR_THREAD_CREATE     -1
@@ -31,6 +32,7 @@
 #define TIMEOUT -2
 
 #define RET_VOID(syscall_num) (syscall_num == SYSCALL_THREAD_DISPATCH || \
+                               syscall_num == SYSCALL_THREAD_JOINALL || \
                                syscall_num == SYSCALL_PUTC || \
                                syscall_num == SYSCALL_SEND)
 
@@ -63,6 +65,10 @@ int thread_exit(); // syscall 0x12
 
 void thread_dispatch(); // syscall 0x13
 
+int timedJoin(thread_t handle, time_t timeout); // syscall 0x14
+
+void thread_joinall(); // syscall 0x15
+
 int sem_open(sem_t* handle, unsigned init); // syscall 0x21
 
 int sem_close(sem_t handle); // syscall 0x22
@@ -84,8 +90,6 @@ void putc(char c); // syscall 0x42
 void send(thread_t handle, const char* message); // syscall 0x51
 
 const char* receive(); // syscall 0x52
-
-int timedJoin(thread_t handle, time_t timeout); // syscall 0x14
 
 #ifdef __cplusplus
 }

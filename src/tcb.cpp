@@ -38,12 +38,13 @@ TCB::TCB(Body body, void* arg, Mode mode, void* userStackSpace, uint64 timeSlice
         body(body), arg(arg),
         finished(false), exitStatus(0), nextReady(nullptr),
         semTimedJoin(kSemaphore::kSemaphoreCreate(0)), numOfJoining(0),
+        semJoinAll(kSemaphore::kSemaphoreCreate(0)), numOfActiveChildren(0),
         timeSlice(timeSlice), sleeps(false), timeSleepRelative(0), nextSleep(nullptr),
         blockedAtSem(nullptr), nextSemBlocked(nullptr), unblockManner(UnblockManner::REGULAR),
         semSend(kSemaphore::kSemaphoreCreate(1)), semReceive(kSemaphore::kSemaphoreCreate(0))
     {
         if ((body && (sps.userSP == 0 || sps.systemSP == 0))
-            || !semSend || !semReceive || !semTimedJoin)
+            || !semSend || !semReceive || !semTimedJoin || !semJoinAll)
         {
             delete[] userStack;
             userStack = nullptr;
@@ -53,6 +54,7 @@ TCB::TCB(Body body, void* arg, Mode mode, void* userStackSpace, uint64 timeSlice
             if (semSend) semSend->close();
             if (semReceive) semReceive->close();
             if (semTimedJoin) semTimedJoin->close();
+            if (semJoinAll) semJoinAll->close();
         }
         else
         {
@@ -72,6 +74,7 @@ TCB::~TCB()
     if (semSend) semSend->close();
     if (semReceive) semReceive->close();
     if (semTimedJoin) semTimedJoin->close();
+    if (semJoinAll) semJoinAll->close();
 }
 
 TCB* TCB::threadCreate(Body body, void* arg, Mode mode, void* userStackSpace, SchPut schPut)
@@ -90,6 +93,7 @@ TCB* TCB::threadCreate(Body body, void* arg, Mode mode, void* userStackSpace, Sc
             TCBsTail = TCBsTail->nextTCB = tcb;
 
         if (body && schPut) Scheduler::put(tcb);
+        if (tcb->parent) tcb->parent->numOfActiveChildren++;
     }
     return tcb;
 }
@@ -140,6 +144,9 @@ void TCB::finish(uint64 exitStatus)
         TCB::running->numOfJoining--;
     }
     TCB::running->semTimedJoin->close();
+    if (TCB::running->parent && !TCB::running->parent->isFinished())
+        TCB::running->parent->semJoinAll->signal();
+    TCB::running->semJoinAll->close();
     if (TCB::running->blockedAtSem) TCB::running->blockedAtSem->get(TCB::running);
     if (TCB::running->sleeps) Sleep::get(TCB::running);
     TCB::running->exitStatus = exitStatus;
