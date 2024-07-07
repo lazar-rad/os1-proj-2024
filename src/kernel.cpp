@@ -220,6 +220,9 @@ uint64 Kernel::handleReceive(uint64 a1, uint64 a2, uint64 a3, uint64 a4)
 uint64 Kernel::handleTimedJoin(uint64 a1, uint64 a2, uint64 a3, uint64 a4)
 {
     TCB* tcb = (TCB*)a1;
+    if (tcb->isFinished()) return 0;
     tcb->numOfJoining++;
-    return (uint64)tcb->semTimedJoin->timedWait((time_t)a2);
+    int ret = tcb->semTimedJoin->timedWait((time_t)a2);
+    if (ret == TIMEOUT && !tcb->isFinished()) tcb->numOfJoining--;
+    return (uint64)ret;
 }
