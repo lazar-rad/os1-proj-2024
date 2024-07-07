@@ -4,13 +4,13 @@ University project for the course “Operating systems 1” at ETF Belgrade
 Written by Lazar Radosavljević
 using project base and basic thread management principles provided by the lecturers
 
-lecturers:
-Dragan Milićev
-Živojin Šuštran
-Uroš Radenković
-Marko Mićović
-Luka Hrvačević
-Predrag Obradović
+Lecturers:
+- Dragan Milićev
+- Živojin Šuštran
+- Uroš Radenković
+- Marko Mićović
+- Luka Hrvačević
+- Predrag Obradović
 
 The operating system provides the following services:
 - thread management (create, exit, dispatch, timed join, join all)
@@ -28,15 +28,21 @@ The operating system provides the following services:
 # How to use
 
 The user should implement the method `void userMain()`. The headers `h/syscall_c.h`, `h/syscall_cpp.hpp`, and `test/printing.hpp` are meant for user’s use.
+
 The file `test/userMain.cpp` serves for the purposes of testing and provides the method `void userMain()`, so when implementing their own `void userMain()`, the user should exclude that file from the compilation process (for example, by adding another extension to its name, so `make` doesn’t recognise it as a CPP source file).
+
 The user can start an arbitrary number of threads. All user threads, including the one on `void userMain()`, run in the unprivileged mode.
 
 # How it functions
 
 Communication with the OS is done through system calls and has three layers: ABI, C API, and C++ API.
+
 ABI is the lowest layer and it invokes system calls. When a system call is invoked, the OS expects the system call number in register `a0` and its arguments (if there are any) in registers `a1` through `a4`.
+
 C API is a wrapper around ABI. C++ API is a wrapper around C API.
+
 System call numbers are given in `h/syscall_c.h`.
+
 In most cases, C API just passes its the arguments to the ABI. Exceptions are the following C API methods:
 - `void* mem_alloc(size_t size)`: in the C API, `size` represents the size in bytes; in the ABI, it is the size in memory blocks (64 bytes)
 - `int thread_create (thread_t* handle, void(*start_routine)(void*), void* arg)`: ABI version is equivalent of `int thread_create (thread_t* handle, void(*start_routine)(void*), void* arg, void* stack_space)`; the additional argument is the pointer to the bottom of the user-allocated stack; if `NULL` is passed, then the kernel is responsible for the allocation of the stack; C API defaults to the latter solution
