@@ -5,6 +5,7 @@
 #define LEVEL_3_IMPLEMENTED 1
 #define LEVEL_4_IMPLEMENTED 1
 #define MODIFICATION_20_IMPLEMENTED 1
+#define MODIFICATION_30_IMPLEMENTED 1
 
 #if LEVEL_2_IMPLEMENTED == 1
 // TEST 1 (zadatak 2, niti C API i sinhrona promena konteksta)
@@ -28,12 +29,16 @@
 // TEST 6 (zadatak 4. CPP API i asinhrona promena konteksta)
 #include "../test/ConsumerProducer_CPP_API_test.hpp"
 #include "System_Mode_test.hpp"
-
 #endif
 
 #if MODIFICATION_20_IMPLEMENTED == 1
 // TEST 8 (zadatak 8. (modifikacija 20): send receive)
 #include "../test/SendReceive_CPP_API_test.hpp"
+#endif
+
+#if MODIFICATION_30_IMPLEMENTED == 1
+// TEST 9 (zadatak 9. (modifikacija 30): timedJoin)
+#include "../test/TimedJoin_CPP_API_test.hpp"
 #endif
 
 void userMain() {
@@ -109,7 +114,13 @@ void userMain() {
         case 8:
 #if MODIFICATION_20_IMPLEMENTED == 1
             testSendReceive();
-            printString("TEST 8 (zadatak 8. (modifikacija 20): send receive)\n");
+            printString("TEST 8 (modifikacija 20: send receive)\n");
+#endif
+            break;
+        case 9:
+#if MODIFICATION_30_IMPLEMENTED == 1
+            testTimedJoin();
+            printString("TEST 9 (modifikacija 30: timedJoin)\n");
 #endif
             break;
         default:

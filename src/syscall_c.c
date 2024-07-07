@@ -92,6 +92,11 @@ const char* receive()
     return (const char*)syscall(SYSCALL_RECEIVE, 0, 0, 0, 0);
 }
 
+int timedJoin(thread_t handle, time_t timeout)
+{
+    return (int)syscall(SYSCALL_TIMEDJOIN, (uint64)handle, (uint64)timeout, 0, 0);
+}
+
 #ifdef __cplusplus
 }
 #endif

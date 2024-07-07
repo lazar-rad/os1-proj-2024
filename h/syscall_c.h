@@ -17,6 +17,7 @@
 #define SYSCALL_PUTC            0x42
 #define SYSCALL_SEND            0x51
 #define SYSCALL_RECEIVE         0x52
+#define SYSCALL_TIMEDJOIN       0x14
 
 #define ERR_MEM_FREE          -1
 #define ERR_THREAD_CREATE     -1
@@ -82,10 +83,9 @@ void putc(char c); // syscall 0x42
 
 void send(thread_t handle, const char* message); // syscall 0x51
 
-const char* receive(); // syscall0x52
+const char* receive(); // syscall 0x52
 
-#define SYSCALL_SWITCH  0x7f
-int systemSwitch(int mode);
+int timedJoin(thread_t handle, time_t timeout); // syscall 0x14
 
 #ifdef __cplusplus
 }

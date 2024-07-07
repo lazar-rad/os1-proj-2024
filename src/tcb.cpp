@@ -17,6 +17,8 @@ uint64 TCB::timeSliceCounter = 0;
 TCB* TCB::TCBsHead;
 TCB* TCB::TCBsTail;
 
+
+
 TCB::~TCB()
 {
     delete userStack;
@@ -25,8 +27,9 @@ TCB::~TCB()
     nextReady = nullptr;
     nextSleep = nullptr;
     nextSemBlocked = nullptr;
-    semSend->close();
-    semReceive->close();
+    if (semSend) semSend->close();
+    if (semReceive) semReceive->close();
+    if (semTimedJoin) semTimedJoin->close();
 }
 
 TCB* TCB::threadCreate(Body body, void* arg, Mode mode, void* userStackSpace, SchPut schPut)
@@ -34,7 +37,8 @@ TCB* TCB::threadCreate(Body body, void* arg, Mode mode, void* userStackSpace, Sc
     TCB* tcb = new TCB(body, arg, mode, userStackSpace, DEFAULT_TIME_SLICE);
     tcb->semSend = kSemaphore::kSemaphoreCreate(1);
     tcb->semReceive = kSemaphore::kSemaphoreCreate(0);
-    if (!tcb->semSend || !tcb->semReceive) tcb->setFinished(true);
+    tcb->semTimedJoin = kSemaphore::kSemaphoreCreate(0);
+    if (!tcb->semSend || !tcb->semReceive || !tcb->semTimedJoin) tcb->setFinished(true);
     if (tcb->isFinished())
     {
         delete tcb;
@@ -90,6 +94,14 @@ void TCB::threadWrapper()
 
 void TCB::finish(uint64 exitStatus)
 {
+    TCB::running->semSend->close();
+    TCB::running->semReceive->close();
+    while (TCB::running->numOfJoining > 0)
+    {
+        TCB::running->semTimedJoin->signal();
+        TCB::running->numOfJoining--;
+    }
+    TCB::running->semTimedJoin->close();
     if (TCB::running->blockedAtSem) TCB::running->blockedAtSem->get(TCB::running);
     if (TCB::running->sleeps) Sleep::get(TCB::running);
     TCB::running->exitStatus = exitStatus;

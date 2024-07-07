@@ -78,6 +78,7 @@ private:
         ),
         body(body), arg(arg),
         finished(false), exitStatus(0), nextReady(nullptr),
+        semTimedJoin(nullptr), numOfJoining(0),
         timeSlice(timeSlice), sleeps(false), timeSleepRelative(0), nextSleep(nullptr),
         blockedAtSem(nullptr), nextSemBlocked(nullptr), unblockManner(UnblockManner::REGULAR),
         semSend(nullptr), semReceive(nullptr), message(nullptr)
@@ -91,7 +92,6 @@ private:
             finished = true;
         }
     }
-
 
     uint64 threadID;
     Mode mode;
@@ -110,6 +110,9 @@ private:
     bool finished;
     uint64 exitStatus;
     TCB* nextReady;
+
+    kSemaphore* semTimedJoin;
+    uint64 numOfJoining;
 
     uint64 timeSlice;
     bool sleeps;

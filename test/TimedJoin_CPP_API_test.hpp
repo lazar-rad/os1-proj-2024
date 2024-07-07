@@ -1,0 +1,6 @@
+#ifndef XV6_TIMEDJOIN_CPP_API_TEST_HPP
+#define XV6_TIMEDJOIN_CPP_API_TEST_HPP
+
+void testTimedJoin();
+
+#endif //XV6_TIMEDJOIN_CPP_API_TEST_HPP

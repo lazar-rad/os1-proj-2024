@@ -152,6 +152,7 @@ private:
 
     static uint64 handleReceive(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 
+    static uint64 handleTimedJoin(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 };
 
 inline uint64 Kernel::r_scause()
