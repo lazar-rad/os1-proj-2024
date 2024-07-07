@@ -39,7 +39,7 @@ void thread_dispatch()
 
 int timedJoin(thread_t handle, time_t timeout)
 {
-    return (int)syscall(SYSCALL_TIMEDJOIN, (uint64)handle, (uint64)timeout, 0, 0);
+    return (int)syscall(SYSCALL_THREAD_TIMEDJOIN, (uint64)handle, (uint64)timeout, 0, 0);
 }
 
 void thread_joinall()

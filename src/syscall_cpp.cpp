@@ -23,6 +23,8 @@ void Thread::runWrapper(void* p)
 
 int Thread::start()
 {
+    if (myHandle) return ERR_THREAD_STARTED;
+
     int ret;
 
     if (body)

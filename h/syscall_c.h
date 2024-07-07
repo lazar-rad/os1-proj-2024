@@ -1,28 +1,30 @@
 #ifndef _syscall_c
 #define _syscall_c
 
-#define SYSCALL_MEM_ALLOC       0x01
-#define SYSCALL_MEM_FREE        0x02
-#define SYSCALL_THREAD_CREATE   0x11
-#define SYSCALL_THREAD_EXIT     0x12
-#define SYSCALL_THREAD_DISPATCH 0x13
-#define SYSCALL_TIMEDJOIN       0x14
-#define SYSCALL_THREAD_JOINALL  0x15
-#define SYSCALL_SEM_OPEN        0x21
-#define SYSCALL_SEM_CLOSE       0x22
-#define SYSCALL_SEM_WAIT        0x23
-#define SYSCALL_SEM_SIGNAL      0x24
-#define SYSCALL_SEM_TIMEDWAIT   0x25
-#define SYSCALL_SEM_TRYWAIT     0x26
-#define SYSCALL_TIME_SLEEP      0x31
-#define SYSCALL_GETC            0x41
-#define SYSCALL_PUTC            0x42
-#define SYSCALL_SEND            0x51
-#define SYSCALL_RECEIVE         0x52
+#define SYSCALL_MEM_ALLOC        0x01
+#define SYSCALL_MEM_FREE         0x02
+#define SYSCALL_THREAD_CREATE    0x11
+#define SYSCALL_THREAD_EXIT      0x12
+#define SYSCALL_THREAD_DISPATCH  0x13
+#define SYSCALL_THREAD_TIMEDJOIN 0x14
+#define SYSCALL_THREAD_JOINALL   0x15
+#define SYSCALL_SEM_OPEN         0x21
+#define SYSCALL_SEM_CLOSE        0x22
+#define SYSCALL_SEM_WAIT         0x23
+#define SYSCALL_SEM_SIGNAL       0x24
+#define SYSCALL_SEM_TIMEDWAIT    0x25
+#define SYSCALL_SEM_TRYWAIT      0x26
+#define SYSCALL_TIME_SLEEP       0x31
+#define SYSCALL_GETC             0x41
+#define SYSCALL_PUTC             0x42
+#define SYSCALL_SEND             0x51
+#define SYSCALL_RECEIVE          0x52
 
 #define ERR_MEM_FREE          -1
 #define ERR_THREAD_CREATE     -1
 #define ERR_THREAD_EXIT       -1
+#define ERR_THREAD_STARTED    -2
+#define ERR_THREAD_SELFJOIN   -3
 #define ERR_SEM_DEAD          -1
 #define ERR_SEM_CREATE        -3
 #define ERR_SEM_WAITCLOSE     -4

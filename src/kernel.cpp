@@ -41,11 +41,11 @@ void Kernel::init()
 
     irr[SYSCALL_MEM_ALLOC] = &handleMemAlloc;
     irr[SYSCALL_MEM_FREE]  = &handleMemFree;
-    irr[SYSCALL_THREAD_CREATE]   = &handleThreadCreate;
-    irr[SYSCALL_THREAD_EXIT]     = &handleThreadExit;
-    irr[SYSCALL_THREAD_DISPATCH] = &handleThreadDispatch;
-    irr[SYSCALL_TIMEDJOIN]       = &handleTimedJoin;
-    irr[SYSCALL_THREAD_JOINALL]  = &handleJoinAll;
+    irr[SYSCALL_THREAD_CREATE]    = &handleThreadCreate;
+    irr[SYSCALL_THREAD_EXIT]      = &handleThreadExit;
+    irr[SYSCALL_THREAD_DISPATCH]  = &handleThreadDispatch;
+    irr[SYSCALL_THREAD_TIMEDJOIN] = &handleTimedJoin;
+    irr[SYSCALL_THREAD_JOINALL]   = &handleJoinAll;
     irr[SYSCALL_SEM_OPEN]      = &handleSemOpen;
     irr[SYSCALL_SEM_CLOSE]     = &handleSemClose;
     irr[SYSCALL_SEM_WAIT]      = &handleSemWait;
@@ -162,6 +162,7 @@ uint64 Kernel::handleThreadDispatch(uint64 a1_0, uint64 a2_0, uint64 a3_0, uint6
 uint64 Kernel::handleTimedJoin(uint64 a1_handle, uint64 a2_timeout, uint64 a3_0, uint64 a4_0)
 {
     TCB* tcb = (TCB*)a1_handle;
+    if (tcb == TCB::running) return ERR_THREAD_SELFJOIN;
     if (tcb->isFinished()) return 0;
     tcb->numOfJoining++;
     int ret = tcb->semTimedJoin->timedWait((time_t)a2_timeout);
@@ -238,6 +239,7 @@ uint64 Kernel::handlePutc(uint64 a1_c, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 uint64 Kernel::handleSend(uint64 a1_handle, uint64 a2_msg, uint64 a3_0, uint64 a4_0)
 {
     TCB* tcb = (TCB*)a1_handle;
+    if (tcb == TCB::running) return 0;
     tcb->semSend->wait();
     tcb->setMsg((const char*)a2_msg);
     tcb->semReceive->signal();
