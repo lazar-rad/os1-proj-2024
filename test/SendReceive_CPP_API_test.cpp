@@ -73,7 +73,6 @@ static void threadC(void* p)
     td->sems[2]->signal();
 }
 
-
 void testSendReceive()
 {
     ThreadData threadData;

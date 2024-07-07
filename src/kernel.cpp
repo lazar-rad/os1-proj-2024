@@ -52,6 +52,7 @@ void Kernel::init()
     irr[SYSCALL_PUTC] = &handlePutc;
     irr[SYSCALL_SEND] = &handleSend;
     irr[SYSCALL_RECEIVE] = &handleReceive;
+    irr[SYSCALL_TIMEDJOIN] = &handleTimedJoin;
 
     master = TCB::threadCreate(nullptr, nullptr, TCB::Mode::SYSTEM, nullptr);
 }
@@ -203,7 +204,7 @@ uint64 Kernel::handleSend(uint64 a1, uint64 a2, uint64 a3, uint64 a4)
 {
     TCB* tcb = (TCB*)a1;
     tcb->semSend->wait();
-    tcb->message = (char*)a2;
+    tcb->setMsg((const char*)a2);
     tcb->semReceive->signal();
     return 0;
 }
@@ -214,4 +215,11 @@ uint64 Kernel::handleReceive(uint64 a1, uint64 a2, uint64 a3, uint64 a4)
     char* msg = TCB::running->message;
     TCB::running->semSend->signal();
     return (uint64)msg;
+}
+
+uint64 Kernel::handleTimedJoin(uint64 a1, uint64 a2, uint64 a3, uint64 a4)
+{
+    TCB* tcb = (TCB*)a1;
+    tcb->numOfJoining++;
+    return (uint64)tcb->semTimedJoin->timedWait((time_t)a2);
 }

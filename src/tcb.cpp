@@ -17,6 +17,50 @@ uint64 TCB::timeSliceCounter = 0;
 TCB* TCB::TCBsHead;
 TCB* TCB::TCBsTail;
 
+TCB::TCB(Body body, void* arg, Mode mode, void* userStackSpace, uint64 timeSlice) :
+        threadID(IDCounter++), mode(mode), parent(running), nextTCB(nullptr),
+        systemLevelCounter(body ? 0 : 1),
+        userStack(body && !userStackSpace ? new StackField[DEFAULT_STACK_SIZE] : nullptr),
+        systemStack(body ? new StackField[DEFAULT_STACK_SIZE] : nullptr),
+        sps(
+            {
+                userStackSpace ? (uint64)userStackSpace : (userStack ? (uint64) &userStack[DEFAULT_STACK_SIZE] : 0),
+                systemStack ? (uint64) &systemStack[DEFAULT_STACK_SIZE] : 0
+            }
+        ),
+        context(
+            {
+                (uint64)&threadWrapper,
+                sps.userSP,
+                { 0 }
+            }
+        ),
+        body(body), arg(arg),
+        finished(false), exitStatus(0), nextReady(nullptr),
+        semTimedJoin(kSemaphore::kSemaphoreCreate(0)), numOfJoining(0),
+        timeSlice(timeSlice), sleeps(false), timeSleepRelative(0), nextSleep(nullptr),
+        blockedAtSem(nullptr), nextSemBlocked(nullptr), unblockManner(UnblockManner::REGULAR),
+        semSend(kSemaphore::kSemaphoreCreate(1)), semReceive(kSemaphore::kSemaphoreCreate(0))
+    {
+        if ((body && (sps.userSP == 0 || sps.systemSP == 0))
+            || !semSend || !semReceive || !semTimedJoin)
+        {
+            delete[] userStack;
+            userStack = nullptr;
+            delete[] systemStack;
+            systemStack = nullptr;
+            finished = true;
+            if (semSend) semSend->close();
+            if (semReceive) semReceive->close();
+            if (semTimedJoin) semTimedJoin->close();
+        }
+        else
+        {
+            for (size_t i = 0; i <= msgLen; i++)
+                message[msgLen] = '\0';
+        }
+    }
+
 TCB::~TCB()
 {
     delete userStack;
@@ -25,16 +69,14 @@ TCB::~TCB()
     nextReady = nullptr;
     nextSleep = nullptr;
     nextSemBlocked = nullptr;
-    semSend->close();
-    semReceive->close();
+    if (semSend) semSend->close();
+    if (semReceive) semReceive->close();
+    if (semTimedJoin) semTimedJoin->close();
 }
 
 TCB* TCB::threadCreate(Body body, void* arg, Mode mode, void* userStackSpace, SchPut schPut)
 {
     TCB* tcb = new TCB(body, arg, mode, userStackSpace, DEFAULT_TIME_SLICE);
-    tcb->semSend = kSemaphore::kSemaphoreCreate(1);
-    tcb->semReceive = kSemaphore::kSemaphoreCreate(0);
-    if (!tcb->semSend || !tcb->semReceive) tcb->setFinished(true);
     if (tcb->isFinished())
     {
         delete tcb;
@@ -90,6 +132,14 @@ void TCB::threadWrapper()
 
 void TCB::finish(uint64 exitStatus)
 {
+    TCB::running->semSend->close();
+    TCB::running->semReceive->close();
+    while (TCB::running->numOfJoining > 0)
+    {
+        TCB::running->semTimedJoin->signal();
+        TCB::running->numOfJoining--;
+    }
+    TCB::running->semTimedJoin->close();
     if (TCB::running->blockedAtSem) TCB::running->blockedAtSem->get(TCB::running);
     if (TCB::running->sleeps) Sleep::get(TCB::running);
     TCB::running->exitStatus = exitStatus;

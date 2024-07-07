@@ -25,6 +25,8 @@ public:
 
     static const char* receive() { return ::receive(); }
 
+    int timedJoin(time_t timeout) { return ::timedJoin(myHandle, timeout); }
+
 protected:
     Thread () : myHandle(nullptr), body(nullptr), arg(nullptr) { }
     virtual void run () {}
