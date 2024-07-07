@@ -58,40 +58,7 @@ private:
         uint64 s[12];
     };
 
-    explicit TCB(Body body, void* arg, Mode mode, void* userStackSpace, uint64 timeSlice) :
-        threadID(IDCounter++), mode(mode), parent(running), nextTCB(nullptr),
-        systemLevelCounter(body ? 0 : 1),
-        userStack(body && !userStackSpace ? new StackField[DEFAULT_STACK_SIZE] : nullptr),
-        systemStack(body ? new StackField[DEFAULT_STACK_SIZE] : nullptr),
-        sps(
-            {
-                userStackSpace ? (uint64)userStackSpace : (userStack ? (uint64) &userStack[DEFAULT_STACK_SIZE] : 0),
-                systemStack ? (uint64) &systemStack[DEFAULT_STACK_SIZE] : 0
-            }
-        ),
-        context(
-            {
-                (uint64)&threadWrapper,
-                sps.userSP,
-                { 0 }
-            }
-        ),
-        body(body), arg(arg),
-        finished(false), exitStatus(0), nextReady(nullptr),
-        semTimedJoin(nullptr), numOfJoining(0),
-        timeSlice(timeSlice), sleeps(false), timeSleepRelative(0), nextSleep(nullptr),
-        blockedAtSem(nullptr), nextSemBlocked(nullptr), unblockManner(UnblockManner::REGULAR),
-        semSend(nullptr), semReceive(nullptr), message(nullptr)
-    {
-        if (body && (sps.userSP == 0 || sps.systemSP == 0))
-        {
-            delete[] userStack;
-            userStack = nullptr;
-            delete[] systemStack;
-            systemStack = nullptr;
-            finished = true;
-        }
-    }
+    explicit TCB(Body body, void* arg, Mode mode, void* userStackSpace, uint64 timeSlice);
 
     uint64 threadID;
     Mode mode;
@@ -127,7 +94,8 @@ private:
 
     kSemaphore* semSend;
     kSemaphore* semReceive;
-    char* message;
+    static const size_t msgLen = 256;
+    char message[msgLen+1];
     
     static uint64 IDCounter;
     static uint64 timeSliceCounter;
@@ -139,6 +107,14 @@ private:
 
     static void contextSwitch(Context* oldContext, Context* newContext);
     static void finish(uint64 exitStatus = 0);
+
+    inline void setMsg(const char* msg)
+    {
+        size_t i;
+        for (i = 0; msg[i] != '\0' && i < msgLen; i++)
+            message[i] = msg[i];
+        message[i] = '\0';
+    }
 
     friend class Scheduler;
     friend class Kernel;

@@ -204,7 +204,7 @@ uint64 Kernel::handleSend(uint64 a1, uint64 a2, uint64 a3, uint64 a4)
 {
     TCB* tcb = (TCB*)a1;
     tcb->semSend->wait();
-    tcb->message = (char*)a2;
+    tcb->setMsg((const char*)a2);
     tcb->semReceive->signal();
     return 0;
 }
