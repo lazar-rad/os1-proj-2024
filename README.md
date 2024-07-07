@@ -33,6 +33,13 @@ The file `test/userMain.cpp` serves for the purposes of testing and provides the
 
 The user can start an arbitrary number of threads. All user threads, including the one on `void userMain()`, run in the unprivileged mode.
 
+### `make` targets
+
+- `make all`: compile only
+- `make qemu`: compile and start QEMU
+- `make qemu-gdb`: compile and start QEMU in remote debugging mode
+- `make clean`: clean the project
+
 # How it functions
 
 Communication with the OS is done through system calls and has three layers: ABI, C API, and C++ API.
