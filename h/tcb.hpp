@@ -81,7 +81,7 @@ private:
     TCB* nextReady;
 
     kSemaphore* semJoin;
-    uint64 numOfJoining;
+    uint64 numOfJoining();
 
     kSemaphore* semJoinAll;
     uint64 numOfActiveChildren;

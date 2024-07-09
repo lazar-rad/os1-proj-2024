@@ -37,7 +37,7 @@ TCB::TCB(Body body, void* arg, Mode mode, void* userStackSpace, uint64 timeSlice
         ),
         body(body), arg(arg),
         finished(false), exitStatus(0), nextReady(nullptr),
-        semJoin(kSemaphore::kSemaphoreCreate(0)), numOfJoining(0),
+        semJoin(kSemaphore::kSemaphoreCreate(0)),
         semJoinAll(kSemaphore::kSemaphoreCreate(0)), numOfActiveChildren(0),
         timeSlice(timeSlice == 0 ? 1 : (timeSlice > maxTimeSlice ? maxTimeSlice : timeSlice)),
         sleeps(false), timeSleepRelative(0), nextSleep(nullptr),
@@ -142,8 +142,7 @@ void TCB::finish(uint64 exitStatus)
     TCB::running->semSend->close();
     TCB::running->semReceive->close();
 
-    TCB::running->semJoin->signal(TCB::running->numOfJoining);
-    TCB::running->numOfJoining = 0;
+    TCB::running->semJoin->signalAll();
     TCB::running->semJoin->close();
 
     if (TCB::running->parent && !TCB::running->parent->isFinished())
@@ -160,4 +159,9 @@ void TCB::finish(uint64 exitStatus)
     TCB::running->exitStatus = exitStatus;
     TCB::running->setFinished(true);
     TCB::yield(TCB::SchPut::NOPUT);
+}
+
+uint64 TCB::numOfJoining()
+{
+    return semJoin->getBlockedCount();
 }

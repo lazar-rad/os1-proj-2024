@@ -13,9 +13,13 @@ public:
     static kSemaphore* kSemaphoreCreate(uint64 val);
     uint64 close();
     uint64 wait(uint64 tokens = 1);
-    uint64 signal(uint64 tokens = 1, bool onClose = false);
+    uint64 signal(uint64 tokens = 1);
+    uint64 signalAll(uint64 tokens = 0, bool onClose = false);
     uint64 timedWait(time_t timeout, uint64 tokens = 1);
     uint64 tryWait(uint64 tokens = 1);
+
+    uint64 getBlockedCount();
+    uint64 getTokensNeeded();
 
     static void kSemaphoreDeleteAll();
 

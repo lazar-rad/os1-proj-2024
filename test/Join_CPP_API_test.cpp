@@ -62,18 +62,23 @@ static void threadB_11(void* p)
 
 void testJoin()
 {
-    ThreadData11 threadData[20];
+    ThreadData11 threadAData;
+    ThreadData11 threadBData[20];
     Thread* threadB[20];
 
-    Thread* threadA = new Thread(&threadA_11, &threadData[0]);
     Semaphore* parental = new Semaphore(0);
+
+    Thread* threadA = new Thread(&threadA_11, &threadAData);
+    threadAData.num = 0;
+    threadAData.threadA = threadA;
+    threadAData.parental = parental;
 
     for (int i = 0; i < 20; i++)
     {
-        threadData[i].num = i+1;
-        threadData[i].threadA = threadA;
-        threadData[i].parental = parental;
-        threadB[i] = new Thread(&threadB_11, &threadData[i]);
+        threadBData[i].num = i+1;
+        threadBData[i].threadA = threadA;
+        threadBData[i].parental = parental;
+        threadB[i] = new Thread(&threadB_11, &threadBData[i]);
     }
 
     threadA->start();
@@ -82,4 +87,12 @@ void testJoin()
 
     for (int i = 0; i < 21; i++)
         parental->wait();
+    
+    ThreadData11 threadB21Data;
+    Thread* threadB21 = new Thread(&threadB_11, &threadB21Data);
+    threadB21Data.num = 21;
+    threadB21Data.threadA = threadA;
+    threadB21Data.parental = parental;
+    threadB21->start();
+    parental->wait();
 }
