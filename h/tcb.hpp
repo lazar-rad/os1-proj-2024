@@ -80,7 +80,7 @@ private:
     uint64 exitStatus;
     TCB* nextReady;
 
-    kSemaphore* semTimedJoin;
+    kSemaphore* semJoin;
     uint64 numOfJoining;
 
     kSemaphore* semJoinAll;

@@ -10,6 +10,7 @@
 #define MODIFICATION_20_IMPLEMENTED 1
 #define MODIFICATION_30_IMPLEMENTED 1
 #define ADDITIONAL_MOD_JOINALL_IMPLEMENTED 1
+#define ADDITIONAL_MOD_JOIN_IMPLEMENTED 1
 
 #if LEVEL_2_IMPLEMENTED == 1
 // TEST 1 (zadatak 2, niti C API i sinhrona promena konteksta)
@@ -46,8 +47,13 @@
 #endif
 
 #if ADDITIONAL_MOD_JOINALL_IMPLEMENTED == 1
-// TEST 10 (zadatak 10. (dodatna modifikacija, jun 2024): joinAll)
+// TEST 10 (dodatna modifikacija (jun 2024): joinAll)
 #include "../test/JoinAll_CPP_API_test.hpp"
+#endif
+
+#if ADDITIONAL_MOD_JOIN_IMPLEMENTED == 1
+// TEST 11 (dodatna modifikacija: join)
+#include "../test/Join_CPP_API_test.hpp"
 #endif
 
 void userMain() {
@@ -137,6 +143,12 @@ void userMain() {
 #if ADDITIONAL_MOD_JOINALL_IMPLEMENTED == 1
             testJoinAll();
             printString("TEST 10 (dodatna modifikacija (jun 2024): joinAll)\n");
+#endif
+            break;
+        case 11:
+#if ADDITIONAL_MOD_JOIN_IMPLEMENTED == 1
+            testJoin();
+            printString("TEST 11 (dodatna modifikacija: join)\n");
 #endif
             break;
         default:

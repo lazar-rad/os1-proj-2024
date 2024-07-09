@@ -19,15 +19,17 @@ public:
 
     static void dispatch () { thread_dispatch(); }
 
+    int join () { return thread_join(myHandle); }
+
+    int timedJoin (time_t timeout) { return thread_timedjoin(myHandle, timeout); }
+
+    static void joinAll () { return thread_joinall(); }
+
     static int sleep (time_t timeout) { return time_sleep(timeout); }
 
     void send (const char* message) { ::send(myHandle, message); }
 
     static const char* receive () { return ::receive(); }
-
-    int timedJoin (time_t timeout) { return thread_timedjoin(myHandle, timeout); }
-
-    static void joinAll () { return thread_joinall(); }
 
 protected:
     Thread () : myHandle(nullptr), body(nullptr), arg(nullptr) { }

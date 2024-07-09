@@ -68,8 +68,9 @@ SYSCALL_MEM_FREE         0x02
 SYSCALL_THREAD_CREATE    0x11
 SYSCALL_THREAD_EXIT      0x12
 SYSCALL_THREAD_DISPATCH  0x13
-SYSCALL_THREAD_TIMEDJOIN 0x14
-SYSCALL_THREAD_JOINALL   0x15
+SYSCALL_THREAD_JOIN      0x14
+SYSCALL_THREAD_TIMEDJOIN 0x15
+SYSCALL_THREAD_JOINALL   0x16
 SYSCALL_SEM_OPEN         0x21
 SYSCALL_SEM_CLOSE        0x22
 SYSCALL_SEM_WAIT         0x23
@@ -91,6 +92,7 @@ int mem_free(void* p);
 int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg);
 int thread_exit();
 void thread_dispatch();
+int thread_join(thread_t handle);
 int thread_timedjoin(thread_t handle, time_t timeout);
 void thread_joinall();
 int sem_open(sem_t* handle, unsigned init);
@@ -119,11 +121,12 @@ public:
     virtual ~Thread ();
     int start ();
     static void dispatch ();
+    int join ();
+    int timedJoin (time_t timeout);
+    static void joinAll ();
     static int sleep (time_t timeout);
     void send (const char* message);
     static const char* receive ();
-    int timedJoin (time_t timeout);
-    static void joinAll ();
 
 protected:
     Thread ();
