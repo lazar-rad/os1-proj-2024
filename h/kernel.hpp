@@ -15,9 +15,6 @@
 
 using InterruptRoutine = uint64 (*)(uint64, uint64, uint64, uint64);
 
-void userMain();
-void userMainWrapper(void* p);
-
 class Kernel
 {
 public:

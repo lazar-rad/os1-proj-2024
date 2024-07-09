@@ -22,19 +22,6 @@ TCB* Kernel::master = nullptr;
 
 InterruptRoutine Kernel::irr[irrNum] = { nullptr };
 
-void userMainWrapper(void* p)
-{
-    userMain();
-    ((Semaphore*)p)->signal();
-}
-
-/*
-void userMain()
-{
-
-}
-*/
-
 void Kernel::init()
 {
     w_stvec((uint64)&supervisorTrap);
@@ -110,11 +97,11 @@ void Kernel::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, ui
             printString("# exception\n");
             log("  runningID: ",    TCB::running->threadID);
             log("  runningLevel: ", TCB::running->systemLevelCounter);
-            log("  sepc    = ",     sepc, 16);
-            log("  sstatus = ",     Kernel::r_sstatus(), 16);
-            log("  scause  = ",     scause, 16);
-            log("  stval   = ",     Kernel::r_stval(), 16);
-            Kernel::terminate();
+            log("  sepc    = 0x",   sepc, 16);
+            log("  sstatus = 0x",   Kernel::r_sstatus(), 16);
+            log("  scause  = 0x",   scause, 16);
+            log("  stval   = 0x",   Kernel::r_stval(), 16);
+//            Kernel::terminate();
             TCB::finish(-scause);
             break;
     }

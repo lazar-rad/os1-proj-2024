@@ -5,10 +5,12 @@
 #include "../h/sleep.hpp"
 #include "../h/io.hpp"
 
+#include "../h/main.hpp"
 #include "../h/syscall_c.h"
 #include "../h/syscall_cpp.hpp"
 
 #include "../test/printing.hpp"
+#include "../util/printingUtils.hpp"
 
 #include "../kerneltest/testers.hpp"
 #if USE_MEMORY_MANAGER_TESTER == 1
@@ -26,6 +28,14 @@
 #if USE_SLEEP_TESTER == 1
 #include "../kerneltest/sleepTester.hpp"
 #endif
+
+void __attribute__((weak)) userMain() { }
+
+static void userMainWrapper(void* p)
+{
+    userMain();
+    ((Semaphore*)p)->signal();
+}
 
 int main()
 {

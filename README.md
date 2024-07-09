@@ -2,7 +2,7 @@ A small OS kernel for the RISC-V architecture
 
 University project for the course “Operating systems 1” at ETF Belgrade
 
-Written by Lazar Radosavljević using project base and basic thread management principles provided by the lecturers
+Written by Lazar Radosavljević, using project base and basic thread management principles provided by the lecturers
 
 Lecturers:
 - Dragan Milićev
@@ -29,7 +29,7 @@ The operating system provides the following services:
 
 The user should implement the method `void userMain()`. The headers `h/syscall_c.h`, `h/syscall_cpp.hpp`, and `test/printing.hpp` are meant for user’s use.
 
-The file `test/userMain.cpp` serves for the purposes of testing and provides the method `void userMain()`, so when implementing their own `void userMain()`, the user should exclude that file from the compilation process (for example, by adding another extension to its name, so `make` doesn’t recognise it as a CPP source file).
+The file `test/userMain.cpp` serves for the purposes of testing and provides the definition for the method `void userMain()`. When implementing their own `void userMain()`, the user should exclude the content  of that file from the compilation process by setting the value of macro `USE_TEST` in `h/main.hpp` to a value other than `1`. The file `/h/main.cpp` provides a weak definition of `void userMain()` (empty function body).
 
 The user can start an arbitrary number of threads. All user threads, including the one on `void userMain()`, run in the unprivileged mode.
 

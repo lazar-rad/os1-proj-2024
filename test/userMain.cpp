@@ -1,4 +1,7 @@
 #include "printing.hpp"
+#include "../h/main.hpp"
+
+#if USE_TEST == 1
 
 #define LEVEL_1_IMPLEMENTED 0
 #define LEVEL_2_IMPLEMENTED 1
@@ -140,3 +143,5 @@ void userMain() {
             printString("Niste uneli odgovarajuci broj za test\n");
     }
 }
+
+#endif

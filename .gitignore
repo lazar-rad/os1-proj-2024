@@ -16,6 +16,7 @@ build/
 # private
 
 privKernTest/
+.vscode/
 
 # to do
 
