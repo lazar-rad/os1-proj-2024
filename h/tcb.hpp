@@ -81,7 +81,7 @@ private:
     TCB* nextReady;
 
     kSemaphore* semJoin;
-    uint64 numOfJoining;
+    uint64 numOfJoining();
 
     kSemaphore* semJoinAll;
     uint64 numOfActiveChildren;
@@ -94,6 +94,7 @@ private:
 
     enum UnblockManner { REGULAR = 0, ON_CLOSE, WAIT_TIMEOUT };
 
+    uint64 tokensNeeded;
     kSemaphore* blockedAtSem;
     TCB* nextSemBlocked;
     UnblockManner unblockManner;
