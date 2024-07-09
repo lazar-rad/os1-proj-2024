@@ -67,7 +67,7 @@ int thread_exit(); // syscall 0x12
 
 void thread_dispatch(); // syscall 0x13
 
-int timedJoin(thread_t handle, time_t timeout); // syscall 0x14
+int thread_timedjoin(thread_t handle, time_t timeout); // syscall 0x14
 
 void thread_joinall(); // syscall 0x15
 

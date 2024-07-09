@@ -7,7 +7,8 @@ TCB* Scheduler::idle = nullptr;
 
 void Scheduler::init()
 {
-    idle = TCB::threadCreate(&spin, nullptr, TCB::Mode::USER, nullptr, TCB::SchPut::NOPUT);
+    idle = TCB::threadCreate(&spin, nullptr, TCB::Mode::USER, nullptr,
+                             DEFAULT_TIME_SLICE, TCB::SchPut::NOPUT);
 }
 
 void Scheduler::put(TCB* tcb)

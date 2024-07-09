@@ -91,7 +91,7 @@ int mem_free(void* p);
 int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg);
 int thread_exit();
 void thread_dispatch();
-int timedJoin(thread_t handle, time_t timeout);
+int thread_timedjoin(thread_t handle, time_t timeout);
 void thread_joinall();
 int sem_open(sem_t* handle, unsigned init);
 int sem_close(sem_t handle);

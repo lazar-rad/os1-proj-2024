@@ -20,7 +20,9 @@ public:
 
     ~TCB();
 
-    static TCB* threadCreate(Body body, void* arg, Mode mode, void* userStackSpace, SchPut schPut = SchPut::PUT);
+    static TCB* threadCreate(Body body, void* arg, Mode mode, void* userStackSpace,
+                             uint64 timeSlice = DEFAULT_TIME_SLICE,
+                             SchPut schPut = SchPut::PUT);
 
     static void threadDeleteAll();
 
@@ -84,6 +86,7 @@ private:
     kSemaphore* semJoinAll;
     uint64 numOfActiveChildren;
 
+    static const uint64 maxTimeSlice = 32 * DEFAULT_TIME_SLICE;
     uint64 timeSlice;
     bool sleeps;
     time_t timeSleepRelative;

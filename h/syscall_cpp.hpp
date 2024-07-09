@@ -25,7 +25,7 @@ public:
 
     static const char* receive () { return ::receive(); }
 
-    int timedJoin (time_t timeout) { return ::timedJoin(myHandle, timeout); }
+    int timedJoin (time_t timeout) { return thread_timedjoin(myHandle, timeout); }
 
     static void joinAll () { return thread_joinall(); }
 
