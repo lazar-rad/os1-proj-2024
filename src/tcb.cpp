@@ -37,7 +37,7 @@ TCB::TCB(Body body, void* arg, Mode mode, void* userStackSpace, uint64 timeSlice
         ),
         body(body), arg(arg),
         finished(false), exitStatus(0), nextReady(nullptr),
-        semTimedJoin(kSemaphore::kSemaphoreCreate(0)), numOfJoining(0),
+        semJoin(kSemaphore::kSemaphoreCreate(0)), numOfJoining(0),
         semJoinAll(kSemaphore::kSemaphoreCreate(0)), numOfActiveChildren(0),
         timeSlice(timeSlice == 0 ? 1 : (timeSlice > maxTimeSlice ? maxTimeSlice : timeSlice)),
         sleeps(false), timeSleepRelative(0), nextSleep(nullptr),
@@ -45,7 +45,7 @@ TCB::TCB(Body body, void* arg, Mode mode, void* userStackSpace, uint64 timeSlice
         semSend(kSemaphore::kSemaphoreCreate(1)), semReceive(kSemaphore::kSemaphoreCreate(0))
     {
         if ((body && (sps.userSP == 0 || sps.systemSP == 0))
-            || !semSend || !semReceive || !semTimedJoin || !semJoinAll)
+            || !semSend || !semReceive || !semJoin || !semJoinAll)
         {
             delete[] userStack;
             userStack = nullptr;
@@ -54,7 +54,7 @@ TCB::TCB(Body body, void* arg, Mode mode, void* userStackSpace, uint64 timeSlice
             finished = true;
             if (semSend) semSend->close();
             if (semReceive) semReceive->close();
-            if (semTimedJoin) semTimedJoin->close();
+            if (semJoin) semJoin->close();
             if (semJoinAll) semJoinAll->close();
         }
         else
@@ -74,7 +74,7 @@ TCB::~TCB()
     nextSemBlocked = nullptr;
     if (semSend) semSend->close();
     if (semReceive) semReceive->close();
-    if (semTimedJoin) semTimedJoin->close();
+    if (semJoin) semJoin->close();
     if (semJoinAll) semJoinAll->close();
 }
 
@@ -143,10 +143,10 @@ void TCB::finish(uint64 exitStatus)
 
     while (TCB::running->numOfJoining > 0)
     {
-        TCB::running->semTimedJoin->signal();
+        TCB::running->semJoin->signal();
         TCB::running->numOfJoining--;
     }
-    TCB::running->semTimedJoin->close();
+    TCB::running->semJoin->close();
 
     if (TCB::running->parent && !TCB::running->parent->isFinished())
         TCB::running->parent->semJoinAll->signal();

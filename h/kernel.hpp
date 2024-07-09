@@ -127,6 +127,8 @@ private:
 
     static uint64 handleThreadDispatch(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 
+    static uint64 handleJoin(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
+
     static uint64 handleTimedJoin(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 
     static uint64 handleJoinAll(uint64 a1, uint64 a2, uint64 a3, uint64 a4);

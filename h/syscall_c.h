@@ -6,8 +6,10 @@
 #define SYSCALL_THREAD_CREATE    0x11
 #define SYSCALL_THREAD_EXIT      0x12
 #define SYSCALL_THREAD_DISPATCH  0x13
-#define SYSCALL_THREAD_TIMEDJOIN 0x14
-#define SYSCALL_THREAD_JOINALL   0x15
+#define SYSCALL_THREAD_JOIN      0x14
+#define SYSCALL_THREAD_TIMEDJOIN 0x15
+#define SYSCALL_THREAD_JOINALL   0x16
+//#define SYSCALL_THREAD_TIMEDJOINALL 0x17
 #define SYSCALL_SEM_OPEN         0x21
 #define SYSCALL_SEM_CLOSE        0x22
 #define SYSCALL_SEM_WAIT         0x23
@@ -67,9 +69,11 @@ int thread_exit(); // syscall 0x12
 
 void thread_dispatch(); // syscall 0x13
 
-int thread_timedjoin(thread_t handle, time_t timeout); // syscall 0x14
+int thread_join(thread_t handle); // syscall 0x14
 
-void thread_joinall(); // syscall 0x15
+int thread_timedjoin(thread_t handle, time_t timeout); // syscall 0x15
+
+void thread_joinall(); // syscall 0x16
 
 int sem_open(sem_t* handle, unsigned init); // syscall 0x21
 
