@@ -3,6 +3,8 @@
 
 #include "../lib/hw.h"
 
+#include "../kerneltest/testers.hpp"
+
 #define ALIGN(addr, measure) (((addr+measure-1)/measure)*measure)
 #define ROUNDUP(size, block) ((size+block-1)/block)
 
@@ -80,6 +82,12 @@ private:
     static MSH* systemMemoryHead;
     static MSH* userMemoryHead;
 
+#if USE_MEMORY_MANAGER_TESTER == 1
+    friend class MemoryManagerTester;
+#endif
+#if USE_TCB_TESTER == 1
+    friend class TCBTester;
+#endif
 };
 
 #endif // __MEMORY__MANAGER__HPP__

@@ -10,6 +10,23 @@
 
 #include "../test/printing.hpp"
 
+#include "../kerneltest/testers.hpp"
+#if USE_MEMORY_MANAGER_TESTER == 1
+#include "../kerneltest/memoryManagerTester.hpp"
+#endif
+#if USE_TCB_TESTER == 1
+#include "../kerneltest/tcbTester.hpp"
+#endif
+#if USE_SCHEDULER_TESTER == 1
+#include "../kerneltest/schedulerTester.hpp"
+#endif
+#if USE_KSEMAPHORE_TESTER == 1
+#include "../kerneltest/kSemaphoreTester.hpp"
+#endif
+#if USE_SLEEP_TESTER == 1
+#include "../kerneltest/sleepTester.hpp"
+#endif
+
 int main()
 {
 

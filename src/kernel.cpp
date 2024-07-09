@@ -13,8 +13,8 @@
 #include "../h/sleep.hpp"
 #include "../h/io.hpp"
 
-#include "../h/printingUtils.hpp"
 #include "../test/printing.hpp"
+#include "../util/printingUtils.hpp"
 
 bool Kernel::inInterrupt = false;
 
@@ -110,11 +110,10 @@ void Kernel::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, ui
             printString("# exception\n");
             log("  runningID: ",    TCB::running->threadID);
             log("  runningLevel: ", TCB::running->systemLevelCounter);
-            log("  sepc = ",        sepc, 16);
+            log("  sepc    = ",     sepc, 16);
             log("  sstatus = ",     Kernel::r_sstatus(), 16);
-            log("  scause = ",      scause, 16);
-            log("  stval = ",       Kernel::r_stval(), 16);
-//            TCBTester::probe(TCB::running);
+            log("  scause  = ",     scause, 16);
+            log("  stval   = ",     Kernel::r_stval(), 16);
             Kernel::terminate();
             TCB::finish(-scause);
             break;

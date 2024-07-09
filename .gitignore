@@ -1,0 +1,22 @@
+# build
+
+build/
+/kernel
+/kernel.asm
+!/kernel.ld
+.gdbinit*
+*.tex
+*.dvi
+*.idx
+*.aux
+*.log
+*.ind
+*.ilg
+
+# private
+
+privKernTest/
+
+# to do
+
+todo.md

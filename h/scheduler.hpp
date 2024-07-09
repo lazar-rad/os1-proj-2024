@@ -3,6 +3,8 @@
 
 #include "../lib/hw.h"
 
+#include "../kerneltest/testers.hpp"
+
 class TCB;
 
 class Scheduler
@@ -19,6 +21,10 @@ class Scheduler
         static TCB* readyTail;
         static TCB* idle;
         static void spin(void* p);
+        
+#if USE_SCHEDULER_TESTER == 1
+    friend class SchedulerTester;
+#endif
 };
 
 

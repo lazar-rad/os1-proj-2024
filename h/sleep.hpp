@@ -1,8 +1,10 @@
 #ifndef __SLEEP__HPP__
 #define __SLEEP__HPP__
 
+#include "../lib/hw.h"
 #include "../h/tcb.hpp"
-#include "../h/syscall_c.h"
+
+#include "../kerneltest/testers.hpp"
 
 class Sleep
 {
@@ -20,6 +22,10 @@ private:
 
     friend class kSemaphore;
     friend void TCB::finish(uint64);
+
+#if USE_SLEEP_TESTER == 1
+    friend class SleepTester;
+#endif
 };
 
 #endif // __SLEEP__HPP__

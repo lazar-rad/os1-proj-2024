@@ -1,8 +1,8 @@
 A small OS kernel for the RISC-V architecture
+
 University project for the course “Operating systems 1” at ETF Belgrade
 
-Written by Lazar Radosavljević
-using project base and basic thread management principles provided by the lecturers
+Written by Lazar Radosavljević using project base and basic thread management principles provided by the lecturers
 
 Lecturers:
 - Dragan Milićev

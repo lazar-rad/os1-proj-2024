@@ -1,7 +1,7 @@
 #include "../h/syscall_cpp.hpp"
 
 #include "printing.hpp"
-#include "../h/printingUtils.hpp"
+#include "../util/printingUtils.hpp"
 
 static void threadA_10(void* p)
 {

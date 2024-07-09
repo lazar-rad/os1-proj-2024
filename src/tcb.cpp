@@ -7,7 +7,7 @@
 #include "../h/syscall_c.h"
 
 #include "../test/printing.hpp"
-#include "../h/printingUtils.hpp"
+#include "../util/printingUtils.hpp"
 
 TCB* TCB::running = nullptr;
 

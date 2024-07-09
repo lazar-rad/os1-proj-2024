@@ -123,6 +123,16 @@ private:
     friend class Kernel;
     friend class kSemaphore;
     friend class Sleep;
+
+#if USE_TCB_TESTER == 1
+    friend class TCBTester;
+#endif
+#if USE_SCHEDULER_TESTER == 1
+    friend class SchedulerTester;
+#endif
+#if USE_SLEEP_TESTER == 1
+    friend class SleepTester;
+#endif
 };
 
 
