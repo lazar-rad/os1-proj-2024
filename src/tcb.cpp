@@ -41,7 +41,8 @@ TCB::TCB(Body body, void* arg, Mode mode, void* userStackSpace, uint64 timeSlice
         semJoinAll(kSemaphore::kSemaphoreCreate(0)), numOfActiveChildren(0),
         timeSlice(timeSlice == 0 ? 1 : (timeSlice > maxTimeSlice ? maxTimeSlice : timeSlice)),
         sleeps(false), timeSleepRelative(0), nextSleep(nullptr),
-        blockedAtSem(nullptr), nextSemBlocked(nullptr), unblockManner(UnblockManner::REGULAR),
+        tokensNeeded(0), blockedAtSem(nullptr), nextSemBlocked(nullptr),
+        unblockManner(UnblockManner::REGULAR),
         semSend(kSemaphore::kSemaphoreCreate(1)), semReceive(kSemaphore::kSemaphoreCreate(0))
     {
         if ((body && (sps.userSP == 0 || sps.systemSP == 0))
@@ -141,15 +142,16 @@ void TCB::finish(uint64 exitStatus)
     TCB::running->semSend->close();
     TCB::running->semReceive->close();
 
-    while (TCB::running->numOfJoining > 0)
-    {
-        TCB::running->semJoin->signal();
-        TCB::running->numOfJoining--;
-    }
+    TCB::running->semJoin->signal(TCB::running->numOfJoining);
+    TCB::running->numOfJoining = 0;
     TCB::running->semJoin->close();
 
     if (TCB::running->parent && !TCB::running->parent->isFinished())
-        TCB::running->parent->semJoinAll->signal();
+    {
+        TCB::running->parent->numOfActiveChildren--;
+        if (TCB::running->parent->blockedAtSem == TCB::running->parent->semJoinAll)
+            TCB::running->parent->semJoinAll->signal();    
+    }
     TCB::running->semJoinAll->close();
 
     if (TCB::running->blockedAtSem) TCB::running->blockedAtSem->get(TCB::running);

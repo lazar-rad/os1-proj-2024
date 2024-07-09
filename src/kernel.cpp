@@ -169,11 +169,7 @@ uint64 Kernel::handleTimedJoin(uint64 a1_handle, uint64 a2_timeout, uint64 a3_0,
 
 uint64 Kernel::handleJoinAll(uint64 a1_0, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 {
-    while (TCB::running->numOfActiveChildren > 0)
-    {
-        TCB::running->semJoinAll->wait();
-        TCB::running->numOfActiveChildren--;
-    }
+    TCB::running->semJoinAll->wait(TCB::running->numOfActiveChildren);
     return 0;
 }
 

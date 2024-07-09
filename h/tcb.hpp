@@ -94,6 +94,7 @@ private:
 
     enum UnblockManner { REGULAR = 0, ON_CLOSE, WAIT_TIMEOUT };
 
+    uint64 tokensNeeded;
     kSemaphore* blockedAtSem;
     TCB* nextSemBlocked;
     UnblockManner unblockManner;

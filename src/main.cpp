@@ -58,6 +58,12 @@ int main()
 
     // system initialization end
 
+    log("Kernel started");
+#if USE_IO == 0
+    log("using preprovided IO");
+#endif
+    endl;
+
     Semaphore* userMainSem = new Semaphore(0);
 
     TCB* userMainThread;
@@ -70,7 +76,8 @@ int main()
 
     // system closing begin
 
-    printString("Kernel finished\n");
+    endl;
+    log("Kernel finished");
     Thread::sleep(5);
     
     Kernel::mc_sstatus(Kernel::BitMaskSstatus::SSTATUS_SIE);

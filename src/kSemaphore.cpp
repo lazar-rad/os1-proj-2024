@@ -43,7 +43,7 @@ uint64 kSemaphore::close()
     return 0;
 }
 
-void kSemaphore::put(TCB* tcb)
+void kSemaphore::put(TCB* tcb, uint64 tokens)
 {
     if (!tcb) return;
 
@@ -54,6 +54,7 @@ void kSemaphore::put(TCB* tcb)
 
     tcb->blockedAtSem = this;
     tcb->nextSemBlocked = nullptr;
+    tcb->tokensNeeded = tokens;
 }
 
 TCB* kSemaphore::get(TCB* tcb)
@@ -97,55 +98,68 @@ TCB* kSemaphore::get(TCB* tcb)
     {
         ret->blockedAtSem = nullptr;
         ret->nextSemBlocked = nullptr;
+        ret->tokensNeeded = 0;
     }
 
     return ret;
 }
 
-uint64 kSemaphore::wait()
+uint64 kSemaphore::wait(uint64 tokens)
 {
     if (!active) return ERR_SEM_DEAD;
 
-    if (value > 0)
+    if (value >= tokens)
     {
-        value--;
+        value -= tokens;
         TCB::running->unblockManner = TCB::UnblockManner::REGULAR;
     }
     else
     {
-        put(TCB::running);
+        tokens -= value;
+        value = 0;
+        put(TCB::running, tokens);
         TCB::yield(TCB::SchPut::NOPUT);
     }
 
     return resolveManner();
 }
 
-uint64 kSemaphore::signal(bool onClose)
+uint64 kSemaphore::signal(uint64 tokens, bool onClose)
 {
     if (!active) return ERR_SEM_DEAD;
 
-    if (!blockedHead)
-        value++;
-    else
+    while (blockedHead && tokens > 0)
     {
-        TCB* tcb = get();
-        if (tcb->sleeps) Sleep::get(tcb);
-        tcb->unblockManner = onClose ? TCB::UnblockManner::ON_CLOSE
-                                     : TCB::UnblockManner::REGULAR;
-        Scheduler::put(tcb);
+        if (tokens >= blockedHead->tokensNeeded)
+        {
+            tokens -= blockedHead->tokensNeeded;
+            blockedHead->tokensNeeded = 0;
+            TCB* tcb = get();
+            if (tcb->sleeps) Sleep::get(tcb);
+            tcb->unblockManner = onClose ? TCB::UnblockManner::ON_CLOSE
+                                         : TCB::UnblockManner::REGULAR;
+            Scheduler::put(tcb);
+        }
+        else
+        {
+            blockedHead->tokensNeeded -= tokens;
+            tokens = 0;
+        }
     }
+
+    value += tokens;
 
     return 0;
 }
 
-uint64 kSemaphore::tryWait()
+uint64 kSemaphore::tryWait(uint64 tokens)
 {
     if (!active) return ERR_SEM_DEAD;
 
     uint64 ret = 0;
 
-    if (value > 0)
-        value--, ret = 0;
+    if (value >= tokens)
+        value -= tokens, ret = 0;
     else
         ret = 1;
 
@@ -154,18 +168,20 @@ uint64 kSemaphore::tryWait()
     return ret;
 }
 
-uint64 kSemaphore::timedWait(time_t timeout)
+uint64 kSemaphore::timedWait(time_t timeout, uint64 tokens)
 {
     if (!active) return ERR_SEM_DEAD;
 
-    if (value > 0)
+    if (value >= tokens)
     {
-        value--;
+        value -= tokens;
         TCB::running->unblockManner = TCB::UnblockManner::REGULAR;
     }
     else
     {
-        put(TCB::running);
+        tokens -= value;
+        value = 0;
+        put(TCB::running, tokens);
         Sleep::sleep(timeout);
     }
 

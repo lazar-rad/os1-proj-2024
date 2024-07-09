@@ -45,13 +45,33 @@ void testJoinAll()
         threads[i]->start();
     }
 
-    Thread::sleep(26);
+    Thread::sleep(27);
 
     printString("Joining all...\n");
     Thread::joinAll();
     printString("All joined :)\n");
 
     for (int i = 0; i < numOfThreads/2; i++)
+    {
+        delete threads[i];
+        threads[i] = nullptr;
+    }
+    
+    for (int i = numOfThreads/2; i < numOfThreads; i++)
+    {
+        num[i] += numOfThreads;
+        threads[i] = new Thread(&threadA_10, &num[i]);
+        log("Starting thread ", num[i]);
+        threads[i]->start();
+    }
+
+    Thread::sleep(45);
+
+    printString("Joining all...\n");
+    Thread::joinAll();
+    printString("All joined :)\n");
+
+    for (int i = numOfThreads/2; i < numOfThreads; i++)
     {
         delete threads[i];
         threads[i] = nullptr;
