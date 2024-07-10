@@ -133,6 +133,8 @@ private:
 
     static uint64 handleJoinAll(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 
+    static uint64 handletimedJoinAll(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
+
     static uint64 handleSemOpen(uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 
     static uint64 handleSemClose(uint64 a1, uint64 a2, uint64 a3, uint64 a4);

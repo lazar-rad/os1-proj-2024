@@ -52,6 +52,11 @@ void thread_joinall()
     syscall(SYSCALL_THREAD_JOINALL, 0, 0, 0, 0);
 }
 
+int thread_timedjoinall(time_t timeout)
+{
+    return (int)syscall(SYSCALL_THREAD_TIMEDJOINALL, (uint64)timeout, 0, 0, 0);
+}
+
 int sem_open(sem_t* handle, unsigned init)
 {
     return (int)syscall(SYSCALL_SEM_OPEN, (uint64)handle, (uint64)init, 0, 0);

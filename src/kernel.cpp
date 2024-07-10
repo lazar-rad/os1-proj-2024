@@ -34,6 +34,7 @@ void Kernel::init()
     irr[SYSCALL_THREAD_JOIN]      = &handleJoin;
     irr[SYSCALL_THREAD_TIMEDJOIN] = &handleTimedJoin;
     irr[SYSCALL_THREAD_JOINALL]   = &handleJoinAll;
+    irr[SYSCALL_THREAD_TIMEDJOINALL]   = &handletimedJoinAll;
     irr[SYSCALL_SEM_OPEN]      = &handleSemOpen;
     irr[SYSCALL_SEM_CLOSE]     = &handleSemClose;
     irr[SYSCALL_SEM_WAIT]      = &handleSemWait;
@@ -166,6 +167,12 @@ uint64 Kernel::handleJoinAll(uint64 a1_0, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 {
     TCB::running->semJoinAll->wait(TCB::running->numOfActiveChildren);
     return 0;
+}
+
+uint64 Kernel::handletimedJoinAll(uint64 a1_timeout, uint64 a2_0, uint64 a3_0, uint64 a4_0)
+{
+    TCB::running->semJoinAll->timedWait((time_t)a1_timeout, TCB::running->numOfActiveChildren);
+    return TCB::running->numOfActiveChildren;
 }
 
 uint64 Kernel::handleSemOpen(uint64 a1_pHandle, uint64 a2_init, uint64 a3_0, uint64 a4_0)

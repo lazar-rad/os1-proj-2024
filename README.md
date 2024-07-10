@@ -63,25 +63,26 @@ The emulator launches one thread where `int main()` is called. In `int main()`, 
 ## ABI
 
 ```C++
-SYSCALL_MEM_ALLOC        0x01
-SYSCALL_MEM_FREE         0x02
-SYSCALL_THREAD_CREATE    0x11
-SYSCALL_THREAD_EXIT      0x12
-SYSCALL_THREAD_DISPATCH  0x13
-SYSCALL_THREAD_JOIN      0x14
-SYSCALL_THREAD_TIMEDJOIN 0x15
-SYSCALL_THREAD_JOINALL   0x16
-SYSCALL_SEM_OPEN         0x21
-SYSCALL_SEM_CLOSE        0x22
-SYSCALL_SEM_WAIT         0x23
-SYSCALL_SEM_SIGNAL       0x24
-SYSCALL_SEM_TIMEDWAIT    0x25
-SYSCALL_SEM_TRYWAIT      0x26
-SYSCALL_TIME_SLEEP       0x31
-SYSCALL_GETC             0x41
-SYSCALL_PUTC             0x42
-SYSCALL_SEND             0x51
-SYSCALL_RECEIVE          0x52
+SYSCALL_MEM_ALLOC           0x01
+SYSCALL_MEM_FREE            0x02
+SYSCALL_THREAD_CREATE       0x11
+SYSCALL_THREAD_EXIT         0x12
+SYSCALL_THREAD_DISPATCH     0x13
+SYSCALL_THREAD_JOIN         0x14
+SYSCALL_THREAD_TIMEDJOIN    0x15
+SYSCALL_THREAD_JOINALL      0x16
+SYSCALL_THREAD_TIMEDJOINALL 0x17
+SYSCALL_SEM_OPEN            0x21
+SYSCALL_SEM_CLOSE           0x22
+SYSCALL_SEM_WAIT            0x23
+SYSCALL_SEM_SIGNAL          0x24
+SYSCALL_SEM_TIMEDWAIT       0x25
+SYSCALL_SEM_TRYWAIT         0x26
+SYSCALL_TIME_SLEEP          0x31
+SYSCALL_GETC                0x41
+SYSCALL_PUTC                0x42
+SYSCALL_SEND                0x51
+SYSCALL_RECEIVE             0x52
 ```
 
 ## C API
@@ -95,6 +96,7 @@ void thread_dispatch();
 int thread_join(thread_t handle);
 int thread_timedjoin(thread_t handle, time_t timeout);
 void thread_joinall();
+int thread_timedjoinall(time_t timeout);
 int sem_open(sem_t* handle, unsigned init);
 int sem_close(sem_t handle);
 int sem_wait(sem_t id);
@@ -120,10 +122,12 @@ public:
     Thread (void (*body)(void*), void* arg);
     virtual ~Thread ();
     int start ();
+    static int exit ();
     static void dispatch ();
     int join ();
     int timedJoin (time_t timeout);
     static void joinAll ();
+    static void timedJoinAll (time_t timeout);
     static int sleep (time_t timeout);
     void send (const char* message);
     static const char* receive ();

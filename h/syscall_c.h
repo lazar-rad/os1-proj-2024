@@ -9,7 +9,7 @@
 #define SYSCALL_THREAD_JOIN      0x14
 #define SYSCALL_THREAD_TIMEDJOIN 0x15
 #define SYSCALL_THREAD_JOINALL   0x16
-//#define SYSCALL_THREAD_TIMEDJOINALL 0x17
+#define SYSCALL_THREAD_TIMEDJOINALL 0x17
 #define SYSCALL_SEM_OPEN         0x21
 #define SYSCALL_SEM_CLOSE        0x22
 #define SYSCALL_SEM_WAIT         0x23
@@ -74,6 +74,8 @@ int thread_join(thread_t handle); // syscall 0x14
 int thread_timedjoin(thread_t handle, time_t timeout); // syscall 0x15
 
 void thread_joinall(); // syscall 0x16
+
+int thread_timedjoinall(time_t timeout); // syscall 0x17
 
 int sem_open(sem_t* handle, unsigned init); // syscall 0x21
 

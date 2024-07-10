@@ -1,13 +1,13 @@
+#include "../h/main.hpp"
+#include "../h/syscall_c.h"
+#include "../h/syscall_cpp.hpp"
+
 #include "../h/memoryManager.hpp"
 #include "../h/tcb.hpp"
 #include "../h/kernel.hpp"
 #include "../h/kSemaphore.hpp"
 #include "../h/sleep.hpp"
 #include "../h/io.hpp"
-
-#include "../h/main.hpp"
-#include "../h/syscall_c.h"
-#include "../h/syscall_cpp.hpp"
 
 #include "../test/printing.hpp"
 #include "../util/printingUtils.hpp"
@@ -29,12 +29,16 @@
 #include "../kerneltest/sleepTester.hpp"
 #endif
 
+#define USER_MAIN_WAIT_TIME 200
+
 void __attribute__((weak)) userMain() { }
 
 static void userMainWrapper(void* p)
 {
     userMain();
+#if USE_EMBEDDED_JOIN != 1
     ((Semaphore*)p)->signal();
+#endif
 }
 
 int main()
@@ -64,15 +68,19 @@ int main()
 #endif
     endl;
 
+#if USE_EMBEDDED_JOIN == 1
+    thread_t userMainThread;
+    thread_create(&userMainThread, &userMainWrapper, nullptr);
+    thread_join(userMainThread);
+#else
     Semaphore* userMainSem = new Semaphore(0);
-
-    TCB* userMainThread;
-    thread_create((thread_t*)&userMainThread, &userMainWrapper, userMainSem);
-
-    while (userMainSem->timedWait(200) == TIMEOUT)
+    thread_t userMainThread;
+    thread_create(&userMainThread, &userMainWrapper, userMainSem);
+    while (userMainSem->timedWait(USER_MAIN_WAIT_TIME) == TIMEOUT)
     {
-        if (userMainThread->isFinished()) break;
+        if (((TCB*)userMainThread)->isFinished()) break;
     }
+#endif
 
     // system closing begin
 

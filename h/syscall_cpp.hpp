@@ -17,13 +17,17 @@ public:
 
     int start ();
 
+    static int exit () { return thread_exit(); }
+
     static void dispatch () { thread_dispatch(); }
 
     int join () { return thread_join(myHandle); }
 
     int timedJoin (time_t timeout) { return thread_timedjoin(myHandle, timeout); }
 
-    static void joinAll () { return thread_joinall(); }
+    static void joinAll () { thread_joinall(); }
+
+    static int timedJoinAll (time_t timeout) { return thread_timedjoinall(timeout); }
 
     static int sleep (time_t timeout) { return time_sleep(timeout); }
 
