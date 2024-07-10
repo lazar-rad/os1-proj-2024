@@ -26,6 +26,7 @@ void TCBTester::probe(const TCB* tcb)
     log("  tcb->arg = ", tcb->arg);
     log("  tcb->finished = ", tcb->finished);
 #endif
+    (void)tcb;
 }
 
 void __attribute__((weak)) TCBTester::dummy (void* p) { while (p && !p); }

@@ -58,7 +58,6 @@ const int EOF = -1;
 extern "C" {
 #endif
 
-
 void* mem_alloc(size_t size); // syscall 0x01
 
 int mem_free(void* p); // syscall 0x02

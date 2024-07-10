@@ -33,6 +33,8 @@ void IO::inputRoutine(void* p)
             inputBuffer->uPut(c);
         }
     }
+
+    (void)p;
 }
 
 void IO::outputRoutine(void* p)
@@ -47,4 +49,6 @@ void IO::outputRoutine(void* p)
             *((char*)CONSOLE_TX_DATA) = c;
         }
     }
+
+    (void)p;
 }

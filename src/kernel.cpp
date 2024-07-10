@@ -122,11 +122,13 @@ void Kernel::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, ui
 uint64 Kernel::handleMemAlloc(uint64 a1_size, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 {
     return (uint64)MemoryManager::memAlloc(a1_size);
+    (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleMemFree(uint64 a1_p, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 {
     return MemoryManager::memFree((void*)a1_p);
+    (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleThreadCreate(uint64 a1_pHandle, uint64 a2_start_routine,
@@ -142,12 +144,14 @@ uint64 Kernel::handleThreadExit(uint64 a1_0, uint64 a2_0, uint64 a3_0, uint64 a4
 {
     TCB::finish();
     return ERR_THREAD_EXIT;
+    (void)a1_0; (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleThreadDispatch(uint64 a1_0, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 {
     TCB::yield(TCB::SchPut::PUT);
     return 0;
+    (void)a1_0; (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleJoin(uint64 a1_handle, uint64 a2_0, uint64 a3_0, uint64 a4_0)
@@ -156,6 +160,7 @@ uint64 Kernel::handleJoin(uint64 a1_handle, uint64 a2_0, uint64 a3_0, uint64 a4_
     if (tcb == TCB::running) return ERR_THREAD_SELFJOIN;
     if (tcb->isFinished()) return 0;
     return (uint64)tcb->semJoin->wait();
+    (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleTimedJoin(uint64 a1_handle, uint64 a2_timeout, uint64 a3_0, uint64 a4_0)
@@ -164,18 +169,21 @@ uint64 Kernel::handleTimedJoin(uint64 a1_handle, uint64 a2_timeout, uint64 a3_0,
     if (tcb == TCB::running) return ERR_THREAD_SELFJOIN;
     if (tcb->isFinished()) return 0;
     return (uint64)tcb->semJoin->timedWait((time_t)a2_timeout);
+    (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleJoinAll(uint64 a1_0, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 {
     TCB::running->semJoinAll->wait(TCB::running->numOfActiveChildren);
     return 0;
+    (void)a1_0; (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handletimedJoinAll(uint64 a1_timeout, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 {
     TCB::running->semJoinAll->timedWait((time_t)a1_timeout, TCB::running->numOfActiveChildren);
     return TCB::running->numOfActiveChildren;
+    (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleSemOpen(uint64 a1_pHandle, uint64 a2_init, uint64 a3_0, uint64 a4_0)
@@ -183,36 +191,43 @@ uint64 Kernel::handleSemOpen(uint64 a1_pHandle, uint64 a2_init, uint64 a3_0, uin
     kSemaphore* sem = kSemaphore::kSemaphoreCreate((uint64)a2_init);
     *((kSemaphore**)a1_pHandle) = sem;
     return sem ? 0 : ERR_SEM_CREATE;
+    (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleSemClose(uint64 a1_handle, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 {
     return (int)((kSemaphore*)a1_handle)->close();
+    (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleSemWait(uint64 a1_handle, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 {
     return (int)((kSemaphore*)a1_handle)->wait();
+    (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleSemSignal(uint64 a1_handle, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 {
     return (int)((kSemaphore*)a1_handle)->signal();
+    (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleSemTimedWait(uint64 a1_handle, uint64 a2_timeout, uint64 a3_0, uint64 a4_0)
 {
     return (int)((kSemaphore*)a1_handle)->timedWait(a2_timeout);
+    (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleSemTryWait(uint64 a1_handle, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 {
     return (int)((kSemaphore*)a1_handle)->tryWait();
+    (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleTimeSleep(uint64 a1_timeout, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 {
     return (uint64)Sleep::sleep((time_t)a1_timeout);
+    (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleGetc(uint64 a1_0, uint64 a2_0, uint64 a3_0, uint64 a4_0)
@@ -222,6 +237,7 @@ uint64 Kernel::handleGetc(uint64 a1_0, uint64 a2_0, uint64 a3_0, uint64 a4_0)
 #else
     return (uint64)__getc();
 #endif
+    (void)a1_0; (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handlePutc(uint64 a1_c, uint64 a2_0, uint64 a3_0, uint64 a4_0)
@@ -232,6 +248,7 @@ uint64 Kernel::handlePutc(uint64 a1_c, uint64 a2_0, uint64 a3_0, uint64 a4_0)
     __putc((char)a1_c);
 #endif
     return 0;
+    (void)a2_0; (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleSend(uint64 a1_handle, uint64 a2_msg, uint64 a3_0, uint64 a4_0)
@@ -242,6 +259,7 @@ uint64 Kernel::handleSend(uint64 a1_handle, uint64 a2_msg, uint64 a3_0, uint64 a
     tcb->setMsg((const char*)a2_msg);
     tcb->semReceive->signal();
     return 0;
+    (void)a3_0; (void)a4_0;
 }
 
 uint64 Kernel::handleReceive(uint64 a1_0, uint64 a2_0, uint64 a3_0, uint64 a4_0)
@@ -250,4 +268,5 @@ uint64 Kernel::handleReceive(uint64 a1_0, uint64 a2_0, uint64 a3_0, uint64 a4_0)
     char* msg = TCB::running->message;
     TCB::running->semSend->signal();
     return (uint64)msg;
+    (void)a1_0; (void)a2_0; (void)a3_0; (void)a4_0;
 }
