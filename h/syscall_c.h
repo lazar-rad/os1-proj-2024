@@ -52,7 +52,7 @@ typedef _sem* sem_t;
 typedef unsigned long size_t;
 typedef unsigned long time_t;
 
-const int EOF = -1;
+extern const int EOF; // -1
 
 #ifdef __cplusplus
 extern "C" {

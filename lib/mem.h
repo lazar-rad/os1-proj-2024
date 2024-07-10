@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __MEM__H__
+#define __MEM__H__
 
 #include "hw.h"
 
@@ -19,3 +20,4 @@
     }
 #endif
 
+#endif // __MEM__H__

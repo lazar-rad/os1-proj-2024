@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __HW__H__
+#define __HW__H__
 
 typedef unsigned int   uint;
 typedef unsigned short ushort;
@@ -39,3 +40,5 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+#endif // __HW__H__

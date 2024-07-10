@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __CONSOLE__H__
+#define __CONSOLE__H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,3 +14,5 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+#endif // __CONSOLE__H__

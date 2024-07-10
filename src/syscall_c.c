@@ -8,6 +8,8 @@ extern "C" {
 
 #define ROUNDUP(size, block) ((size+block-1)/block)
 
+const int EOF = -1;
+
 uint64 syscall(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uint64 a4);
 
 void* mem_alloc(size_t size)
