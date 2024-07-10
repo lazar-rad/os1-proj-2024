@@ -7,7 +7,9 @@
 #include "../h/kernel.hpp"
 #include "../h/kSemaphore.hpp"
 #include "../h/sleep.hpp"
+#if USE_IO == 1
 #include "../h/io.hpp"
+#endif
 
 #include "../test/printing.hpp"
 #include "../util/printingUtils.hpp"

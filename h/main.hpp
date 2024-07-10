@@ -1,6 +1,7 @@
 #ifndef __MAIN__HPP__
 #define __MAIN__HPP__
 
+#define USE_IO 1
 #define USE_EMBEDDED_JOIN 1
 #define USE_TEST 1
 

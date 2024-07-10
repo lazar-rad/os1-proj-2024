@@ -1,4 +1,5 @@
 #include "../lib/hw.h"
+#include "../h/main.hpp"
 
 #if USE_IO != 1
 #include "../lib/console.h"
@@ -11,7 +12,9 @@
 #include "../h/kernel.hpp"
 #include "../h/kSemaphore.hpp"
 #include "../h/sleep.hpp"
+#if USE_IO == 1
 #include "../h/io.hpp"
+#endif
 
 #include "../test/printing.hpp"
 #include "../util/printingUtils.hpp"

@@ -9,8 +9,6 @@
 #include "../h/tcb.hpp"
 #include "../h/kSemaphore.hpp"
 
-#define USE_IO 1
-
 class CharBuffer
 {
 public:
