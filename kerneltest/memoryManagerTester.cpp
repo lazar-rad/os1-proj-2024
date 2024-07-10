@@ -21,4 +21,5 @@ void MemoryManagerTester::usageDiagnostics(int base)
     log("  system: ", Fractional(totalSize(MemoryManager::systemMemoryHead)*100, heapSize, 2), 1);
     log("  user  : ", Fractional(totalSize(MemoryManager::userMemoryHead)*100, heapSize, 2), 1);
 #endif
+    (void)base;
 }

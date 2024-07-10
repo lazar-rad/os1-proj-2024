@@ -43,5 +43,5 @@ TCB* Scheduler::get()
 
 void Scheduler::spin(void* p)
 {
-    if (p || !p) while (1);
+    (void)p;
 }

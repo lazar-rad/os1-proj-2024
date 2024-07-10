@@ -41,6 +41,7 @@ static void userMainWrapper(void* p)
 #if USE_EMBEDDED_JOIN != 1
     ((Semaphore*)p)->signal();
 #endif
+    (void)p;
 }
 
 int main()
