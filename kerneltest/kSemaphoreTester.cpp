@@ -4,8 +4,8 @@
 #include "../kerneltest/kSemaphoreTester.hpp"
 #include "../kerneltest/testers.hpp"
 
-#include "../test/printing.hpp"
-#include "../util/printingUtils.hpp"
+#include "../util/mPrint.hpp"
+#include "../util/mPrintUtils.hpp"
 
 
 void __attribute__((weak)) kSemaphoreTester::test() { }

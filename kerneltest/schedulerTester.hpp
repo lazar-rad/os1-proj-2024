@@ -16,5 +16,4 @@ class SchedulerTester
 #endif
 };
 
-
 #endif // __SCHEDULER__TESTER__HPP__

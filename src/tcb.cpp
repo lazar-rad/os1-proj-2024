@@ -6,8 +6,8 @@
 
 #include "../h/syscall_c.h"
 
-#include "../test/printing.hpp"
-#include "../util/printingUtils.hpp"
+#include "../util/mPrint.hpp"
+#include "../util/mPrintUtils.hpp"
 
 TCB* TCB::running = nullptr;
 

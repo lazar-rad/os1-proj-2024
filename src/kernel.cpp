@@ -16,8 +16,8 @@
 #include "../h/io.hpp"
 #endif
 
-#include "../test/printing.hpp"
-#include "../util/printingUtils.hpp"
+#include "../util/mPrint.hpp"
+#include "../util/mPrintUtils.hpp"
 
 bool Kernel::inInterrupt = false;
 
@@ -99,7 +99,7 @@ void Kernel::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, ui
             break;
 
         default:
-            printString("# exception\n");
+            mPrintString("# exception\n");
             log("  runningID: ",    TCB::running->threadID);
             log("  runningLevel: ", TCB::running->systemLevelCounter);
             log("  sepc    = 0x",   sepc, 16);

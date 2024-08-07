@@ -64,7 +64,7 @@
 
 void userMain() {
     char input[30];
-    printString("Unesite broj testa? [1-10]\n");
+    printString("Unesite broj testa? [1-12]\n");
     getString(input, 30);
     int test = stringToInt(input);
 

@@ -11,8 +11,8 @@
 #include "../h/io.hpp"
 #endif
 
-#include "../test/printing.hpp"
-#include "../util/printingUtils.hpp"
+#include "../util/mPrint.hpp"
+#include "../util/mPrintUtils.hpp"
 
 #include "../kerneltest/testers.hpp"
 #if USE_MEMORY_MANAGER_TESTER == 1
@@ -29,6 +29,9 @@
 #endif
 #if USE_SLEEP_TESTER == 1
 #include "../kerneltest/sleepTester.hpp"
+#endif
+#if USE_MPRINT_TESTER == 1
+#include "../kerneltest/mPrintTester.hpp"
 #endif
 
 #define USER_MAIN_WAIT_TIME 200

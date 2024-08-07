@@ -6,6 +6,7 @@
 #define USE_SCHEDULER_TESTER        0
 #define USE_KSEMAPHORE_TESTER       0
 #define USE_SLEEP_TESTER            0
+#define USE_MPRINT_TESTER           0
 
 
 #endif // __TESTERS__HPP__

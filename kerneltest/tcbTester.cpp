@@ -4,8 +4,8 @@
 #include "../kerneltest/tcbTester.hpp"
 #include "../kerneltest/testers.hpp"
 
-#include "../test/printing.hpp"
-#include "../util/printingUtils.hpp"
+#include "../util/mPrint.hpp"
+#include "../util/mPrintUtils.hpp"
 
 void TCBTester::probe(const TCB* tcb)
 {
@@ -29,6 +29,6 @@ void TCBTester::probe(const TCB* tcb)
     (void)tcb;
 }
 
-void __attribute__((weak)) TCBTester::dummy (void* p) { while (p && !p); }
+void __attribute__((weak)) TCBTester::dummy (void* p) { (void)p; }
 
 void __attribute__((weak)) TCBTester::test() { }

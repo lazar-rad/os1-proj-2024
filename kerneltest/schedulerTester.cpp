@@ -4,13 +4,13 @@
 #include "../kerneltest/schedulerTester.hpp"
 #include "../kerneltest/testers.hpp"
 
-#include "../test/printing.hpp"
-#include "../util/printingUtils.hpp"
+#include "../util/mPrint.hpp"
+#include "../util/mPrintUtils.hpp"
 
 void SchedulerTester::probe()
 {
 #if USE_SCHEDULER_TESTER == 1
-    printString("Scheduler content:\n");
+    mPrintString("Scheduler content:\n");
 
     for (TCB* tcb = Scheduler::readyHead; tcb; tcb = tcb->nextReady)
         log("  in Scheduler: ", tcb->threadID);

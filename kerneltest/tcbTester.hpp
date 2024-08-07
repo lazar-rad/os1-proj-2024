@@ -11,5 +11,4 @@ public:
     static void dummy(void* p);
 };
 
-
 #endif // __TCB__TESTER__HPP__
